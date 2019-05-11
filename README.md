@@ -1,2 +1,2 @@
-# UChoose-News
-Group Project #1
+# Project-Mayhem
+Project 1
