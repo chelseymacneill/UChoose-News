@@ -8,6 +8,7 @@
 
    <title>Document</title>
 </head>
+
 <body>
 
  <!-- navbar with ust an image -->
@@ -50,7 +51,10 @@
 
                 </div>
 
-                <a href="#" id="filtered-news-button" class="btn btn-primary">Push News Feed</a>
+                <a id="filtered-news-button" style="color:white" class="btn btn-primary">Push News Feed</a>
+
+                <a id="clear-newsfeed-button" style="color:white" class="btn btn-secondary">Clear News Feed</a>
+
 
             </div>
 
@@ -133,7 +137,7 @@
                 articles.append(pTitle)
                 
                 // Adding the URL for the article
-                var pLink = $("<p>").text("Link to Article: " + response.articles[i].url)
+                var pLink = $("<a>").text(response.articles[i].url).attr("href", response.articles[i].url).attr('target','_blank')
                 
                 //Displaying the URL 
                 articles.append(pLink)
@@ -144,23 +148,27 @@
         });
     }
     
-    // Function calls
+    // Buttons
     // ====================================================
     
-    // On click of submit button have the news articles displayed
-    $("#filtered-news-button").on('click', displayingArticles);
-    
-   
+    // Changes button color to red on click, and back to gray on additional click.
+   $(document).on('click', '.list-group-item.list-group-item-action', function(){
+       $(this).toggleClass("list-group-item-danger");
+   });
+
      // Appends a custom button to the default list of buttons.
    $( "#custom-filter" ).click(function() {
        var customFilter = $("#custom-filter-input").val();
        $("<a>" + customFilter + "</a>").appendTo("#filters").addClass("list-group-item list-group-item-action");
    });
 
-   // Changes button color to red on click, and back to gray on additional click.
-   $(document).on('click', '.list-group-item.list-group-item-action', function(){
-       $(this).toggleClass("list-group-item-danger");
+   // On click of submit button have the news articles displayed
+   $("#filtered-news-button").on('click', displayingArticles);
+
+   $("#clear-newsfeed-button").click(function() {
+        $("#MainDisplay").empty();
    });
+   
 
 </script>
 </html>
