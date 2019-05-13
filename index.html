@@ -44,17 +44,16 @@
                 <div class="input-group mb-3 my-5">
 
                     <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary" type="button" id="custom-filter">Custom Filter</button>
+                        <button style="box-shadow: none" class="btn btn-outline-secondary" type="button" id="custom-filter">Custom Filter</button>
                     </div>
 
                     <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="custom-filter-input">
 
                 </div>
 
-                <a id="filtered-news-button" style="color:white" class="btn btn-primary">Push News Feed</a>
+                <a id="filtered-news-button" style="color:white" class="btn btn-primary mb-2">Push News Feed</a>
 
-                <a id="clear-newsfeed-button" style="color:white" class="btn btn-secondary">Clear News Feed</a>
-
+                <a id="clear-newsfeed-button" style="color:white" class="btn btn-secondary mb-2">Clear News Feed</a>
 
             </div>
 
@@ -75,6 +74,9 @@
 
 <script>
 
+    // API call function
+    // ====================================================
+    
     function displayingArticles() {
         // country (optional)
         country = 'us'
@@ -130,7 +132,7 @@
                 var articles = $("<div id='articles' class='card mb-5 p-3'>");
                 
                 // Storing the title of the article 
-                var pTitle = $("<h6>").text("Title: " + response.articles[i].title)
+                var pTitle = $("<h6>").text(response.articles[i].title)
                 console.log(response.articles[i].title)
                 
                 // Displaying the title
@@ -148,7 +150,7 @@
         });
     }
     
-    // Buttons
+    // Buttons 
     // ====================================================
     
     // Changes button color to red on click, and back to gray on additional click.
@@ -156,16 +158,24 @@
        $(this).toggleClass("list-group-item-danger");
    });
 
-     // Appends a custom button to the default list of buttons.
+     // Appends a custom button to the default list of buttons. 
+     // Will not append new custom button if the input field is blank. Will not append previously added custom button.
+     alreadyAdded = [];
    $( "#custom-filter" ).click(function() {
        var customFilter = $("#custom-filter-input").val();
-       $("<a>" + customFilter + "</a>").appendTo("#filters").addClass("list-group-item list-group-item-action");
+       if (customFilter === "" || (alreadyAdded.indexOf(customFilter) !== -1)) {
+            console.log("Will not input blank field. Will not repeat last added custom filter.");
+       } else {
+            $("<a>" + customFilter + "</a>").appendTo("#filters").addClass("list-group-item list-group-item-action");
+            alreadyAdded.push(customFilter);
+            console.log(alreadyAdded)
+       }
    });
 
    // On click of submit button have the news articles displayed
    $("#filtered-news-button").on('click', displayingArticles);
 
-   $("#clear-newsfeed-button").click(function() {
+   $("#clear-newsfeed-button").click(function(e) {
         $("#MainDisplay").empty();
    });
    
