@@ -18,49 +18,146 @@
 </nav>
 
 <div class="my-5 container">
-   <div class="card">
-       <h5 class="card-header">News Feed</h5>
-       <div class="card-body">
-               <div class="col-4">
-                       <div class="list-group" id="filters">
-                           <a href="" class="list-group-item active disabled" aria-disabled="true">Apply Filters:</a>
-                           <a id="War" class="list-group-item list-group-item-action" >War</a>
-                           <a id="Terrorism" class="list-group-item list-group-item-action">Terrorism</a>
-                           <a id="Shootings" class="list-group-item list-group-item-action">Shootings</a>
-                           <a id="Politics" class="list-group-item list-group-item-action">Politics</a>
-                           <a id="Donald-Trump" class="list-group-item list-group-item-action">Donald Trump</a>
-                           <a id="Kanye" class="list-group-item list-group-item-action">Kanye</a>
-                           <a id="Movie-Spoilers" class="list-group-item list-group-item-action">Movie Spoliers</a>
-                           <a id="Sports-Spoilers" class="list-group-item list-group-item-action">Sports Spoilers</a>
-                           <a id="Natural-Disasters" class="list-group-item list-group-item-action">Natural Disasters</a>
-                           <a id="Threat-of-Nuclear-War" class="list-group-item list-group-item-action">Threat of Nuclear War</a>
-                       </div>
-                       <div class="input-group mb-3 my-5">
-                           <div class="input-group-prepend">
-                               <button class="btn btn-outline-secondary" type="button" id="custom-filter">Custom Filter</button>
-                           </div>
-                           <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="custom-filter-input">
-                       </div>
+    <div class="card">
 
-                 <a href="#" class="btn btn-primary">Push News Feed</a>
-                 <div class="col-8">
-       </div>
-   </div>
-   </div>
+        <h5 class="card-header">News Feed</h5>
+
+        <div class="card-body row">
+
+            <div class="col-4">
+
+                <div class="list-group" id="filters">
+                    <a href="" class="list-group-item active disabled" aria-disabled="true">Apply Filters:</a>
+                    <a id="War" class="list-group-item list-group-item-action" >War</a>
+                    <a id="Terrorism" class="list-group-item list-group-item-action">Terrorism</a>
+                    <a id="Shootings" class="list-group-item list-group-item-action">Shootings</a>
+                    <a id="Politics" class="list-group-item list-group-item-action">Politics</a>
+                    <a id="Donald-Trump" class="list-group-item list-group-item-action">Donald Trump</a>
+                    <a id="Kanye" class="list-group-item list-group-item-action">Kanye</a>
+                    <a id="Movie-Spoilers" class="list-group-item list-group-item-action">Movie Spoliers</a>
+                    <a id="Sports-Spoilers" class="list-group-item list-group-item-action">Sports Spoilers</a>
+                    <a id="Natural-Disasters" class="list-group-item list-group-item-action">Natural Disasters</a>
+                    <a id="Threat-of-Nuclear-War" class="list-group-item list-group-item-action">Threat of Nuclear War</a>
+                </div>
+
+                <div class="input-group mb-3 my-5">
+
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" id="custom-filter">Custom Filter</button>
+                    </div>
+
+                    <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="custom-filter-input">
+
+                </div>
+
+                <a href="#" id="filtered-news-button" class="btn btn-primary">Push News Feed</a>
+
+            </div>
+
+            <div class="col-8">
+              <div id="MainDisplay"></div>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
 </body>
 
-<script
- src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
 
 <script>
 
+    function displayingArticles() {
+        // country (optional)
+        country = 'us'
+        // Registered API call 
+        var apiKey = 'a5d3ce7509aa44c08d88ab9be804d0fb'
+        
+        
+        // Query to pass to the API call 
+        // top headlines 'https://newsapi.org/v2/top-headlines?q='
+        // everything  https://newsapi.org/v2/everything?
+
+
+        
+        // Build the combined URL 
+        
+        // default q 
+        country = 'us'
+        // main topic of interest
+        var main = 'Jeff Bezos'    // will become user input
+        
+        // subtopic of interest
+        var sub1 = '' // will become user input
+        
+        // main topic of disinterest
+        var mainNot = 'space' // will become user input
+        
+        // subtopic of disinterest
+        // var sub1Not = //will become user input
+        
+        // SPACES ARE INTENTIONAL AND IMPORTANT!!
+        
+        var queryURL = ''
+        
+        // Building the URL based on user choices
+        if (main && mainNot) {
+            queryURL = 'https://newsapi.org/v2/everything?q=' + main +   ' NOT (' + mainNot + ') &apiKey=' + apiKey 
+        } else queryURL = 'https://newsapi.org/v2/top-headlines?country=' + country+  '&apiKey=' + apiKey 
+
+
+        console.log(queryURL)
+        
+        //API Call 
+        $.ajax({
+            url : queryURL,
+            method : "GET"
+        }).then (function(response){
+            console.log(response)
+            
+            // Returns an article for 
+            for (var i = 0; i < 10; i++) {
+                
+                // Creating a div to hold the title
+                var articles = $("<div id='articles' class='card mb-5 p-3'>");
+                
+                // Storing the title of the article 
+                var pTitle = $("<h6>").text("Title: " + response.articles[i].title)
+                console.log(response.articles[i].title)
+                
+                // Displaying the title
+                articles.append(pTitle)
+                
+                // Adding the URL for the article
+                var pLink = $("<p>").text("Link to Article: " + response.articles[i].url)
+                
+                //Displaying the URL 
+                articles.append(pLink)
+                
+                // Append the built div to the page
+                $("#MainDisplay").append(articles);
+            }
+        });
+    }
+    
+    // Function calls
+    // ====================================================
+    
+    // On click of submit button have the news articles displayed
+    $("#filtered-news-button").on('click', displayingArticles);
+    
+   
+     // Appends a custom button to the default list of buttons.
    $( "#custom-filter" ).click(function() {
        var customFilter = $("#custom-filter-input").val();
        $("<a>" + customFilter + "</a>").appendTo("#filters").addClass("list-group-item list-group-item-action");
    });
 
+   // Changes button color to red on click, and back to gray on additional click.
    $(document).on('click', '.list-group-item.list-group-item-action', function(){
        $(this).toggleClass("list-group-item-danger");
    });
