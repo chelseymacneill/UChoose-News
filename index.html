@@ -76,7 +76,7 @@
 
     // API call function
     // ====================================================
-    
+    var page = 1;
     function displayingArticles() {
         // country (optional)
         country = 'us'
@@ -112,7 +112,7 @@
         
         // Building the URL based on user choices
         if (main && mainNot) {
-            queryURL = 'https://newsapi.org/v2/everything?q=' + main +   ' NOT (' + mainNot + ') &apiKey=' + apiKey 
+            queryURL = 'https://newsapi.org/v2/everything?q=' + main +   ' NOT (' + mainNot + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey 
         } else queryURL = 'https://newsapi.org/v2/top-headlines?country=' + country+  '&apiKey=' + apiKey 
 
 
@@ -129,26 +129,71 @@
             for (var i = 0; i < 10; i++) {
                 
                 // Creating a div to hold the title
-                var articles = $("<div id='articles' class='card mb-5 p-3'>");
+                const elem = `<div id="article_${i}" class="card mb-5 p-3">`;
+                var articles = $(elem);
                 
                 // Storing the title of the article 
                 var pTitle = $("<h6>").text(response.articles[i].title)
                 console.log(response.articles[i].title)
-                
+
                 // Displaying the title
                 articles.append(pTitle)
-                
+            
                 // Adding the URL for the article
                 var pLink = $("<a>").text(response.articles[i].url).attr("href", response.articles[i].url).attr('target','_blank')
                 
                 //Displaying the URL 
                 articles.append(pLink)
-                
+
                 // Append the built div to the page
                 $("#MainDisplay").append(articles);
+
+                const newelem = articles;
+                
+                const callback = (score) => { 
+                    console.log(newelem.attr('id') + ' score: ' + score); 
+                    newelem.append($(`<h5>${score}</h5>`));
+                }
+
+                analyzeSentiment(response.articles[i].content, callback);
+                
             }
+            page += 1;
         });
     }
+
+    function analyzeSentiment(content, callback) {
+
+        //API Call Google News API
+        $.ajax({
+            type: "POST",
+            url: "https://language.googleapis.com/v1/documents:analyzeSentiment?key=AIzaSyCGXL4FwDeO8GVzYxFpG3SDc9rSYAICIbQ",
+            contentType: "application/json; charset=utf-8",
+            data:
+                JSON.stringify({
+                    "document": {
+                        "type": "PLAIN_TEXT",
+                        "language": "en",
+                        "content": content,
+                    },
+                    "encodingType": "UTF8"
+                }),
+            success: function (_result) {
+
+                if (_result) {
+                    console.log("hooray")
+                } else {
+                    console.log('ERROR');
+                }
+            },
+
+            error: function (_result) {
+
+            }
+
+        }).done((data) => callback(JSON.stringify(data.documentSentiment.score)));
+    }
+    
     
     // Buttons 
     // ====================================================
