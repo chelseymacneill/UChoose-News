@@ -14,7 +14,7 @@
  <!-- navbar with ust an image -->
 <nav class="navbar navbar-light bg-light">
    <a class="navbar-brand" href="#">
-     <img src="images/u-choose-news2.png" width="120" alt="">
+     <img src="images/u-choose-news3.png" width="150" alt="">
    </a>
 </nav>
 
@@ -75,7 +75,7 @@
 <script>
     var filterArray = [];
     var filterName = " ";
-    
+
     // API call function
     // ====================================================
     var page = 1;
@@ -184,7 +184,6 @@
                     newelem.append($(neutral));
                 };
                 console.log(newelem.attr('id') + ' score: ' + score);
-                console.log(score);
                 // newelem.append($(`<h5>${score}</h5>`));
                 }
 
@@ -233,7 +232,10 @@
     
     // Changes button color to red on click, and back to gray on additional click.
    $(document).on('click', '.list-group-item.list-group-item-action', function(){
+       // Toggles between having the following class and not having it. Class causes buttons to be colored red.
        $(this).toggleClass("list-group-item-danger");
+
+       // The following code pushes as well as removes the id of each button from an array
        filterName = $(this).attr("id");
         let index = filterArray.indexOf(filterName);
         if (index >= 0) {
@@ -242,7 +244,6 @@
             filterArray.push(filterName);
         }
         console.log(filterArray.sort());
-        $("span").attr("data-filter", filterArray.sort());
    });
 
      // Appends a custom button to the default list of buttons. 
