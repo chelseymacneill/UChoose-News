@@ -27,24 +27,48 @@
 
             <div class="col-4">
 
+                <div class="list-group mb-3" id="topics">
+                    <a href="" class="list-group-item active disabled" aria-disabled="true">Choose Topics:</a>
+                    <a id="Politics" class="list-group-item list-group-item-action topic" >Politics</a>
+                    <a id="Economy" class="list-group-item list-group-item-action topic">Economy</a>
+                    <a id="Technology" class="list-group-item list-group-item-action topic">Technology</a>
+                    <a id="Education" class="list-group-item list-group-item-action topic">Education</a>
+                    <a id="Style" class="list-group-item list-group-item-action topic">Style</a>
+                    <a id="Travel" class="list-group-item list-group-item-action topic">Travel</a>
+                    <a id="Sports" class="list-group-item list-group-item-action topic">Sports</a>
+                    <a id="Opinion" class="list-group-item list-group-item-action topic">Opinion</a>
+                    <a id="Film" class="list-group-item list-group-item-action topic">Film</a>
+                    <a id="World News" class="list-group-item list-group-item-action topic">World News</a>
+                </div>
+                
+                <div class="input-group mb-3 my-5">
+
+                    <div class="input-group-prepend">
+                        <button style="box-shadow: none" class="btn btn-outline-secondary" type="button" id="custom-topic">Add Custom Topic</button>
+                    </div>
+
+                    <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="custom-topic-input">
+
+                </div>
+
                 <div class="list-group" id="filters">
                     <a href="" class="list-group-item active disabled" aria-disabled="true">Apply Filters:</a>
-                    <a id="War" class="list-group-item list-group-item-action" >War</a>
-                    <a id="Terrorism" class="list-group-item list-group-item-action">Terrorism</a>
-                    <a id="Shootings" class="list-group-item list-group-item-action">Shootings</a>
-                    <a id="Politics" class="list-group-item list-group-item-action">Politics</a>
-                    <a id="Donald-Trump" class="list-group-item list-group-item-action">Donald Trump</a>
-                    <a id="Kanye" class="list-group-item list-group-item-action">Kanye</a>
-                    <a id="Movie-Spoilers" class="list-group-item list-group-item-action">Movie Spoliers</a>
-                    <a id="Sports-Spoilers" class="list-group-item list-group-item-action">Sports Spoilers</a>
-                    <a id="Natural-Disasters" class="list-group-item list-group-item-action">Natural Disasters</a>
-                    <a id="Threat-of-Nuclear-War" class="list-group-item list-group-item-action">Threat of Nuclear War</a>
+                    <a id="War" class="list-group-item list-group-item-action filter" >War</a>
+                    <a id="Terrorism" class="list-group-item list-group-item-action filter">Terrorism</a>
+                    <a id="Shootings" class="list-group-item list-group-item-action filter">Shootings</a>
+                    <a id="Politics" class="list-group-item list-group-item-action filter">Politics</a>
+                    <a id="Donald-Trump" class="list-group-item list-group-item-action filter">Donald Trump</a>
+                    <a id="Kanye" class="list-group-item list-group-item-action filter">Kanye</a>
+                    <a id="Movie-Spoilers" class="list-group-item list-group-item-action filter">Movie Spoliers</a>
+                    <a id="Sports-Spoilers" class="list-group-item list-group-item-action filter">Sports Spoilers</a>
+                    <a id="Natural-Disasters" class="list-group-item list-group-item-action filter">Natural Disasters</a>
+                    <a id="Threat-of-Nuclear-War" class="list-group-item list-group-item-action filter">Threat of Nuclear War</a>
                 </div>
 
                 <div class="input-group mb-3 my-5">
 
                     <div class="input-group-prepend">
-                        <button style="box-shadow: none" class="btn btn-outline-secondary" type="button" id="custom-filter">Custom Filter</button>
+                        <button style="box-shadow: none" class="btn btn-outline-secondary" type="button" id="custom-filter">Add Custom Filter</button>
                     </div>
 
                     <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="custom-filter-input">
@@ -70,9 +94,12 @@
 </body>
 
 <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/countable/3.0.0/Countable.min.js"></script>
 
 <script>
+    var topicArray = [];
+    var topicName = " ";
+
     var filterArray = [];
     var filterName = " ";
 
@@ -130,6 +157,24 @@
             // Returns an article for 
             for (var i = 0; i < 10; i++) {
                 
+
+                
+                // Countable.count($(".word-count")[0], function(counter) {
+                //     var imageCount = $(".word-count").find("img").length;
+                //     var seconds = counter.words / 275 * 60 + imageCount * 12;
+                //     var minutes = Math.ceil(seconds / 60);
+                //     $(".read-time").html(minutes + " min read");
+
+                //     console.log(counter.words);
+                //     console.log(counter);
+                // });
+        
+                
+                // const contentBucketContainer = `<div id="article_${i}_content">`;
+                // // console.log(contentBucketContainer);
+                // var contentBucket = $(contentBucketContainer);
+                var articleContent = $("<p>").text(response.articles[i].content);
+                
                 // Creating a div to hold the title
                 const elem = `<div id="article_${i}" class="card mb-5 pt-3 pl-3 pr-3 pb-1">`;
                 var articles = $(elem);
@@ -146,6 +191,7 @@
                 
                 //Displaying the URL 
                 articles.append(pLink)
+                articles.append(articleContent)
 
                 // Append the built div to the page
                 $("#MainDisplay").append(articles);
@@ -229,9 +275,23 @@
     
     // Buttons 
     // ====================================================
-    
+    $(document).on('click', '.topic', function(){
+       // Toggles between having the following class and not having it. Class causes buttons to be colored red.
+       $(this).toggleClass("list-group-item-success");
+
+       // The following code pushes as well as removes the id of each button from an array
+       topicName = $(this).attr("id");
+        let index = topicArray.indexOf(topicName);
+        if (index >= 0) {
+            topicArray.splice(index, 1);
+        } else {
+            topicArray.push(topicName);
+        }
+        console.log(topicArray.sort());
+   });
+
     // Changes button color to red on click, and back to gray on additional click.
-   $(document).on('click', '.list-group-item.list-group-item-action', function(){
+   $(document).on('click', '.filter', function(){
        // Toggles between having the following class and not having it. Class causes buttons to be colored red.
        $(this).toggleClass("list-group-item-danger");
 
@@ -248,18 +308,32 @@
 
      // Appends a custom button to the default list of buttons. 
      // Will not append new custom button if the input field is blank. Will not append previously added custom button.
-     alreadyAdded = [];
-   $( "#custom-filter" ).click(function() {
-       var customFilter = $("#custom-filter-input").val();
-       if (customFilter === "" || (alreadyAdded.indexOf(customFilter) !== -1)) {
+     topicssAlreadyAdded = [];
+     $( "#custom-topic" ).click(function() {
+       var customTopic = $("#custom-topic-input").val();
+       if (customTopic === "" || (topicssAlreadyAdded.indexOf(customTopic) !== -1)) {
             console.log("Will not input blank field. Will not repeat last added custom filter.");
        } else {
-            $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action");
-            alreadyAdded.push(customFilter);
+            $("<a>" + customTopic + "</a>").appendTo("#topics").attr('id', customTopic).addClass("list-group-item list-group-item-action topic");
+            topicssAlreadyAdded.push(customTopic);
 
-            console.log(alreadyAdded)
+            console.log(topicssAlreadyAdded)
        }
    });
+
+     filtersAlreadyAdded = [];
+   $( "#custom-filter" ).click(function() {
+       var customFilter = $("#custom-filter-input").val();
+       if (customFilter === "" || (filtersAlreadyAdded.indexOf(customFilter) !== -1)) {
+            console.log("Will not input blank field. Will not repeat last added custom filter.");
+       } else {
+            $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action filter");
+            filtersAlreadyAdded.push(customFilter);
+
+            console.log(filtersAlreadyAdded)
+       }
+   });
+
 
    // On click of submit button have the news articles displayed
    $("#filtered-news-button").on('click', displayingArticles);
