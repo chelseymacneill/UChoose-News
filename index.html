@@ -174,7 +174,8 @@
                 // // console.log(contentBucketContainer);
                 // var contentBucket = $(contentBucketContainer);
                 var articleContent = $("<p>").text(response.articles[i].content);
-                
+                var fullArticleNotice = $("<p>").text("Full article:").addClass("mb-0");
+
                 // Creating a div to hold the title
                 const elem = `<div id="article_${i}" class="card mb-5 pt-3 pl-3 pr-3 pb-1">`;
                 var articles = $(elem);
@@ -187,11 +188,14 @@
                 articles.append(pTitle)
             
                 // Adding the URL for the article
-                var pLink = $("<a>").text(response.articles[i].url).attr("href", response.articles[i].url).attr('target','_blank')
+                var pLink = $("<a>").text(response.articles[i].url).attr("href", response.articles[i].url).attr('target','_blank').addClass("mb-3");
                 
                 //Displaying the URL 
-                articles.append(pLink)
+                
                 articles.append(articleContent)
+                articles.append(fullArticleNotice)
+                articles.append(pLink)
+                
 
                 // Append the built div to the page
                 $("#MainDisplay").append(articles);
