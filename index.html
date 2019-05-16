@@ -73,7 +73,9 @@
 
 
 <script>
-
+    var filterArray = [];
+    var filterName = " ";
+    
     // API call function
     // ====================================================
     var page = 1;
@@ -129,7 +131,7 @@
             for (var i = 0; i < 10; i++) {
                 
                 // Creating a div to hold the title
-                const elem = `<div id="article_${i}" class="card mb-5 p-3">`;
+                const elem = `<div id="article_${i}" class="card mb-5 pt-3 pl-3 pr-3 pb-1">`;
                 var articles = $(elem);
                 
                 // Storing the title of the article 
@@ -150,9 +152,40 @@
 
                 const newelem = articles;
                 
-                const callback = (score) => { 
-                    console.log(newelem.attr('id') + ' score: ' + score); 
-                    newelem.append($(`<h5>${score}</h5>`));
+                // const callback = (score) => { 
+                //     console.log(newelem.attr('id') + ' score: ' + score); 
+                //     newelem.append($(`<p>${score}</p>`));
+                // }
+
+                const callback = (score) => {
+
+                if (score > 0) {
+                    console.log("Positive");
+
+                    var positive = $("<div>").addClass('mt-2 alert alert-success').text("This article has an overall positive tone.");
+                
+                    // newelem.append($("<img src='images/positive.jpg' width='60px'/>"));
+                    newelem.append($(positive));
+                }
+                else if (score < 0) {
+                    console.log("Negative");
+
+                    var negative = $("<div>").addClass('mt-2 alert alert-danger').text("This article has an overall negative tone.");
+                
+                    // newelem.append($("<img src='images/negative.jpg' width='60px'/>"));
+                    newelem.append($(negative));
+                }
+                else {
+                    console.log("Neutral");
+
+                    var neutral = $("<div>").addClass('mt-2 alert alert-warning').text("This article has an overall neutral tone.");
+                
+                    // newelem.append($("<img src='images/neutral.jpg' width='60px'/>"));
+                    newelem.append($(neutral));
+                };
+                console.log(newelem.attr('id') + ' score: ' + score);
+                console.log(score);
+                // newelem.append($(`<h5>${score}</h5>`));
                 }
 
                 analyzeSentiment(response.articles[i].content, callback);
@@ -201,6 +234,15 @@
     // Changes button color to red on click, and back to gray on additional click.
    $(document).on('click', '.list-group-item.list-group-item-action', function(){
        $(this).toggleClass("list-group-item-danger");
+       filterName = $(this).attr("id");
+        let index = filterArray.indexOf(filterName);
+        if (index >= 0) {
+            filterArray.splice(index, 1);
+        } else {
+            filterArray.push(filterName);
+        }
+        console.log(filterArray.sort());
+        $("span").attr("data-filter", filterArray.sort());
    });
 
      // Appends a custom button to the default list of buttons. 
@@ -211,8 +253,9 @@
        if (customFilter === "" || (alreadyAdded.indexOf(customFilter) !== -1)) {
             console.log("Will not input blank field. Will not repeat last added custom filter.");
        } else {
-            $("<a>" + customFilter + "</a>").appendTo("#filters").addClass("list-group-item list-group-item-action");
+            $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action");
             alreadyAdded.push(customFilter);
+
             console.log(alreadyAdded)
        }
    });
@@ -223,7 +266,6 @@
    $("#clear-newsfeed-button").click(function(e) {
         $("#MainDisplay").empty();
    });
-   
 
 </script>
 </html>
