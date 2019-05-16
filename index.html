@@ -75,9 +75,11 @@
 
                 </div>
 
-                <a id="filtered-news-button" style="color:white" class="btn btn-primary mb-2">Push News Feed</a>
+                <a id="reset-all-buttons" style="color:white" class="btn btn-secondary mb-2">Reset All Buttons</a>
 
                 <a id="clear-newsfeed-button" style="color:white" class="btn btn-secondary mb-2">Clear News Feed</a>
+
+                <a id="filtered-news-button" style="color:white" class="btn btn-primary mb-2">Push News Feed</a>
 
             </div>
 
@@ -338,13 +340,19 @@
        }
    });
 
+   $("#clear-newsfeed-button").click(function(e) {
+        $("#MainDisplay").empty();
+   });
+
+   $("#reset-all-buttons").click(function() {
+        $(".list-group-item-action").removeClass("list-group-item-success");
+        $(".list-group-item-action").removeClass("list-group-item-danger");
+   });
 
    // On click of submit button have the news articles displayed
    $("#filtered-news-button").on('click', displayingArticles);
 
-   $("#clear-newsfeed-button").click(function(e) {
-        $("#MainDisplay").empty();
-   });
+   
 
 </script>
 </html>
