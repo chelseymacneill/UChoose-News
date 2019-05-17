@@ -93,7 +93,7 @@ $(document).ready(function()  {
             articles.append(pLink)
             
             // Append the built div to the page
-            $("#MainDisplay").append(articles);
+            $("#MainDisplay").prepend(articles);
             const newelem = articles;
             
             // const callback = (score) => { 
