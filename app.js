@@ -72,6 +72,7 @@ $(document).ready(function()  {
             
             // Creating a div to hold the title
             var articleContent = $("<p>").text(response.articles[i].content);
+
             var fullArticleNotice = $("<p>").text("Full article:").addClass("mb-0");
             // Creating a div to hold the title
             const elem = `<div id="article_${i}" class="card mb-5 pt-3 pl-3 pr-3 pb-1">`;
@@ -199,6 +200,25 @@ function analyzeSentiment(content, callback) {
          }
          console.log(filterArray.sort());
     });
+
+    $(document).on('click', '.positive', function(){
+        // Toggles between having the following class and not having it. Class causes buttons to be colored red.
+        $(this).toggleClass("list-group-item-success");
+        // The following code pushes as well as removes the id of each button from an array
+    });
+
+    $(document).on('click', '.neutral', function(){
+        // Toggles between having the following class and not having it. Class causes buttons to be colored red.
+        $(this).toggleClass("list-group-item-warning");
+        // The following code pushes as well as removes the id of each button from an array
+    });
+
+    $(document).on('click', '.negative', function(){
+        // Toggles between having the following class and not having it. Class causes buttons to be colored red.
+        $(this).toggleClass("list-group-item-danger");
+        // The following code pushes as well as removes the id of each button from an array
+    });
+
       // Appends a custom button to the default list of buttons. 
       // Will not append new custom button if the input field is blank. Will not append previously added custom button.
       topicssAlreadyAdded = [];
@@ -231,6 +251,7 @@ function analyzeSentiment(content, callback) {
     $("#reset-all-buttons").click(function() {
          $(".list-group-item-action").removeClass("list-group-item-success");
          $(".list-group-item-action").removeClass("list-group-item-danger");
+         $(".list-group-item-action").removeClass("list-group-item-warning");
     });
     // On click of submit button have the news articles displayed
     $("#filtered-news-button").on('click', displayingArticles);
