@@ -226,25 +226,28 @@ $(document).ready(function()  {
     // Get a reference to the database service
     var database = firebase.database();
     
-    
-    
-    // Initializing our click count at 0
-    
+    // Save my settings button stores the users name once its clicked
+    $("#save-my-settings").on("click", function() {
+        
+        var username = $('#username').val().trim()
+        
+        localStorage.setItem('username', username)
+
+        var user = localStorage.getItem("username");
+        var ref = '/' + user
+        console.log('nailedit)')
+        // **** Store Click Data to Firebase in a JSON property called clickCount *****
+        // **** Note how we are using the Firebase .set() method ****
+        // **** .ref() refers to the path you want to save your data to
+        // **** Since we left .ref() blank, it will save to the root directory
+        database.ref(ref).set({
+            filterArray: filterArray
+        });
+    });
     
     // On Click
     
 }); // clousure to document on ready 
 
-$("#save-my-settings").on("click", function() {
-   
 
-    console.log('nailedit)')
-    // **** Store Click Data to Firebase in a JSON property called clickCount *****
-    // **** Note how we are using the Firebase .set() method ****
-    // **** .ref() refers to the path you want to save your data to
-    // **** Since we left .ref() blank, it will save to the root directory
-    database.ref().set({
-        'filterArray': 'filterArray'
-    });
-});
 
