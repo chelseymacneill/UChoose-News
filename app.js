@@ -1,11 +1,36 @@
 $(document).ready(function()  {
     
     
-    // Global Variables
+    // Global Variables 
+    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     var filterArray = [];
     var filterName = " ";
     var page = 1;
     
+    // Initializing Firebase real time database
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    //Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyChB3IDp6UAq-V_TP4GsPpw0CxpRyXiYT0",
+        authDomain: "uchoosenews-c7c3a.firebaseapp.com",
+        databaseURL: "https://uchoosenews-c7c3a.firebaseio.com",
+        storageBucket: "uchoosenews-c7c3a.appspot.com",
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Get a reference to the database service
+    var database = firebase.database();
+    
+    // Weblink to Firebase 
+    // https://uchoosenews-c7c3a.firebaseio.com/
+    
+    // Functions 
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    // Function that calls the Google News API and displays them in the UI
     function displayingArticles() {
         // Build the combined URL 
         var apiKey = 'a5d3ce7509aa44c08d88ab9be804d0fb'
@@ -30,13 +55,7 @@ $(document).ready(function()  {
         
         //console.log(filterArray)
         
-        
         // Building the URL based on user choices
-        
-        // Can have a main topic only
-        // Can have an empty main topic 
-        // Can have filtered topic from 1 to as many as you like
-        // Can have empty filter 
         // SPACES ARE INTENTIONAL AND IMPORTANT in the QUERY URL!!
         if (mainTopic && filterArray.length >= 1) {
             queryURL = 'https://newsapi.org/v2/everything?q=' + mainTopic +   ' NOT (' + filterArray + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
@@ -56,7 +75,7 @@ $(document).ready(function()  {
         console.log(filterArray)
         
         
-        //API Call 
+        //API Call to Google News API
         $.ajax({
             url : queryURL,
             method : "GET"
@@ -65,7 +84,7 @@ $(document).ready(function()  {
             console.log(response)
             console.log(queryURL)
             
-            // Returns an article for 
+            // Loops through the response and appends them to the UI
             for (var i = 0; i < 10; i++) {
                 
                 // Creating a div to hold the title
@@ -93,6 +112,7 @@ $(document).ready(function()  {
                 //     newelem.append($(`<p>${score}</p>`));
                 // }
                 
+                // Buckets the results from the score into positive, neutral, or negative sentiment buckets and displays them in the UI
                 const callback = (score) => {
                     
                     if (score > 0) {
@@ -123,18 +143,19 @@ $(document).ready(function()  {
                     // newelem.append($(`<h5>${score}</h5>`));
                 }
                 
-                // What is this hotness?? 
+                // Calls the analyzeSentiment function and passes content from the Google API call to it
                 analyzeSentiment(response.articles[i].content, callback);
                 
             }
+            // Advances the page pulled from Google News API so it doesn't just pull the same articles over and over
             page += 1;
         });
     };
     
-    // Calls the Google NLP API 
+    // Function for Calling the Call Google NLP API
     function analyzeSentiment(content, callback) {
         
-        //API Call Google NLP API
+        
         $.ajax({
             type: "POST",
             url: "https://language.googleapis.com/v1/documents:analyzeSentiment?key=AIzaSyCGXL4FwDeO8GVzYxFpG3SDc9rSYAICIbQ",
@@ -162,9 +183,10 @@ $(document).ready(function()  {
             }
             
         }).done((data) => callback(JSON.stringify(data.documentSentiment.score)));
-    }
-    // Buttons 
-    // ====================================================
+    };
+    
+    // On Click Function Calls
+    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     // Changes button color to red on click, and back to gray on additional click.
     $(document).on('click', '.list-group-item.list-group-item-action', function(){
@@ -198,33 +220,13 @@ $(document).ready(function()  {
         }
     });
     
-    // Function calls
-    // ====================================================
-    
     // On click of submit button have the news articles displayed
     $("#filtered-news-button").on('click', displayingArticles);
     
+    // Clears the newsfeed
     $("#clear-newsfeed-button").click(function(e) {
         $("#MainDisplay").empty();
     });
-    
-    // Adding Firebase
-    
-    // Your web app's Firebase configuration
-    //Config
-    const firebaseConfig = {
-        apiKey: "AIzaSyChB3IDp6UAq-V_TP4GsPpw0CxpRyXiYT0",
-        authDomain: "uchoosenews-c7c3a.firebaseapp.com",
-        databaseURL: "https://uchoosenews-c7c3a.firebaseio.com",
-        storageBucket: "uchoosenews-c7c3a.appspot.com",
-    };
-    
-    
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    
-    // Get a reference to the database service
-    var database = firebase.database();
     
     // Save my settings button stores the users name once its clicked
     $("#save-my-settings").on("click", function() {
@@ -232,7 +234,7 @@ $(document).ready(function()  {
         var username = $('#username').val().trim()
         
         localStorage.setItem('username', username)
-
+        
         var user = localStorage.getItem("username");
         var ref = '/' + user
         console.log('nailedit)')
@@ -244,8 +246,6 @@ $(document).ready(function()  {
             filterArray: filterArray
         });
     });
-    
-    // On Click
     
 }); // clousure to document on ready 
 
