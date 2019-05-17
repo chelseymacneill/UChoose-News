@@ -14,63 +14,89 @@
 
 <body>
 
- <!-- navbar with ust an image -->
-<nav class="navbar navbar-light bg-light">
-   <a class="navbar-brand" href="#">
-     <img src="images/u-choose-news3.png" width="150" alt="">
-   </a>
-</nav>
-
-<div class="my-5 container">
-    <div class="card">
-
-        <h5 class="card-header">News Feed</h5>
-
-        <div class="card-body row">
-
-            <div class="col-4">
-
-                <div class="list-group" id="filters">
-                    <a href="" class="list-group-item active disabled" aria-disabled="true">Apply Filters:</a>
-                    <a id="War" class="list-group-item list-group-item-action" >War</a>
-                    <a id="Terrorism" class="list-group-item list-group-item-action">Terrorism</a>
-                    <a id="Shootings" class="list-group-item list-group-item-action">Shootings</a>
-                    <a id="Politics" class="list-group-item list-group-item-action">Politics</a>
-                    <a id="Donald-Trump" class="list-group-item list-group-item-action">Donald Trump</a>
-                    <a id="Kanye" class="list-group-item list-group-item-action">Kanye</a>
-                    <a id="Movie-Spoilers" class="list-group-item list-group-item-action">Movie Spoliers</a>
-                    <a id="Sports-Spoilers" class="list-group-item list-group-item-action">Sports Spoilers</a>
-                    <a id="Natural-Disasters" class="list-group-item list-group-item-action">Natural Disasters</a>
-                    <a id="Threat-of-Nuclear-War" class="list-group-item list-group-item-action">Threat of Nuclear War</a>
-                </div>
-
-                <div class="input-group mb-3 my-5">
-
-                    <div class="input-group-prepend">
-                        <button style="box-shadow: none" class="btn btn-outline-secondary" type="button" id="custom-filter">Custom Filter</button>
-                    </div>
-
-                    <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="custom-filter-input">
-
-                </div>
-
-                <a id="filtered-news-button" style="color:white" class="btn btn-primary mb-2">Push News Feed</a>
-
-                <a id="clear-newsfeed-button" style="color:white" class="btn btn-secondary mb-2">Clear News Feed</a>
-
-            </div>
-
-            <div class="col-8">
-              <div id="MainDisplay"></div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-</body>
+    <!-- navbar with ust an image -->
+   <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="#">
+        <img src="images/u-choose-news3.png" width="150" alt="">
+      </a>
+   </nav>
+   
+   <div class="my-5 container">
+       <div class="card">
+   
+           <h5 class="card-header">News Feed</h5>
+   
+           <div class="card-body row">
+   
+               <div class="col-4">
+   
+                   <div class="list-group mb-3" id="topics">
+                       <a href="" class="list-group-item active disabled" aria-disabled="true">Choose Topics:</a>
+                       <a id="Politics" class="list-group-item list-group-item-action topic" >Politics</a>
+                       <a id="Economy" class="list-group-item list-group-item-action topic">Economy</a>
+                       <a id="Technology" class="list-group-item list-group-item-action topic">Technology</a>
+                       <a id="Education" class="list-group-item list-group-item-action topic">Education</a>
+                       <a id="Style" class="list-group-item list-group-item-action topic">Style</a>
+                       <a id="Travel" class="list-group-item list-group-item-action topic">Travel</a>
+                       <a id="Sports" class="list-group-item list-group-item-action topic">Sports</a>
+                       <a id="Opinion" class="list-group-item list-group-item-action topic">Opinion</a>
+                       <a id="Film" class="list-group-item list-group-item-action topic">Film</a>
+                       <a id="World News" class="list-group-item list-group-item-action topic">World News</a>
+                   </div>
+                   
+                   <div class="input-group mb-3 my-5">
+   
+                       <div class="input-group-prepend">
+                           <button style="box-shadow: none" class="btn btn-outline-secondary" type="button" id="custom-topic">Add Custom Topic</button>
+                       </div>
+   
+                       <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="custom-topic-input">
+   
+                   </div>
+   
+                   <div class="list-group" id="filters">
+                       <a href="" class="list-group-item active disabled" aria-disabled="true">Apply Filters:</a>
+                       <a id="War" class="list-group-item list-group-item-action filter" >War</a>
+                       <a id="Terrorism" class="list-group-item list-group-item-action filter">Terrorism</a>
+                       <a id="Shootings" class="list-group-item list-group-item-action filter">Shootings</a>
+                       <a id="Politics" class="list-group-item list-group-item-action filter">Politics</a>
+                       <a id="Donald-Trump" class="list-group-item list-group-item-action filter">Donald Trump</a>
+                       <a id="Kanye" class="list-group-item list-group-item-action filter">Kanye</a>
+                       <a id="Movie-Spoilers" class="list-group-item list-group-item-action filter">Movie Spoliers</a>
+                       <a id="Sports-Spoilers" class="list-group-item list-group-item-action filter">Sports Spoilers</a>
+                       <a id="Natural-Disasters" class="list-group-item list-group-item-action filter">Natural Disasters</a>
+                       <a id="Threat-of-Nuclear-War" class="list-group-item list-group-item-action filter">Threat of Nuclear War</a>
+                   </div>
+   
+                   <div class="input-group mb-3 my-5">
+   
+                       <div class="input-group-prepend">
+                           <button style="box-shadow: none" class="btn btn-outline-secondary" type="button" id="custom-filter">Add Custom Filter</button>
+                       </div>
+   
+                       <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="custom-filter-input">
+   
+                   </div>
+   
+                   <a id="reset-all-buttons" style="color:white" class="btn btn-secondary mb-2">Reset All Buttons</a>
+   
+                   <a id="clear-newsfeed-button" style="color:white" class="btn btn-secondary mb-2">Clear News Feed</a>
+   
+                   <a id="filtered-news-button" style="color:white" class="btn btn-primary mb-2">Push News Feed</a>
+   
+               </div>
+   
+               <div class="col-8">
+                 <div id="MainDisplay"></div>
+               </div>
+   
+           </div>
+   
+       </div>
+   
+   </div>
+   
+   </body>
 <!-- Moved this to the head -->
 <!-- <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 -->

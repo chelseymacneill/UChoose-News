@@ -1,6 +1,8 @@
 $(document).ready(function()  {
     
-    
+    var topicArray = [];
+    var topicName = " ";
+
     // Global Variables
     var filterArray = [];
     var filterName = " ";
@@ -69,19 +71,25 @@ $(document).ready(function()  {
         for (var i = 0; i < 10; i++) {
             
             // Creating a div to hold the title
-            var articles = $("<div id='articles'>");
+            var articleContent = $("<p>").text(response.articles[i].content);
+            var fullArticleNotice = $("<p>").text("Full article:").addClass("mb-0");
+            // Creating a div to hold the title
+            const elem = `<div id="article_${i}" class="card mb-5 pt-3 pl-3 pr-3 pb-1">`;
+            var articles = $(elem);
             
             // Storing the title of the article 
-            var pTitle = $("<p>").text("Title: " + response.articles[i].title)
+            var pTitle = $("<h6>").text(response.articles[i].title)
             console.log(response.articles[i].title)
-            
             // Displaying the title
             articles.append(pTitle)
-            
+        
             // Adding the URL for the article
-            var pLink = $("<p>").text("Link to Article:" + response.articles[i].url)
+            var pLink = $("<a>").text(response.articles[i].url).attr("href", response.articles[i].url).attr('target','_blank').addClass("mb-3");
             
             //Displaying the URL 
+            
+            articles.append(articleContent)
+            articles.append(fullArticleNotice)
             articles.append(pLink)
             
             // Append the built div to the page
@@ -163,47 +171,69 @@ function analyzeSentiment(content, callback) {
     }).done((data) => callback(JSON.stringify(data.documentSentiment.score)));
 }
 // Buttons 
-// ====================================================
-
-// Changes button color to red on click, and back to gray on additional click.
-$(document).on('click', '.list-group-item.list-group-item-action', function(){
-    // Toggles between having the following class and not having it. Class causes buttons to be colored red.
-    $(this).toggleClass("list-group-item-danger");
-    
-    // The following code pushes as well as removes the id of each button from an array
-    filterName = $(this).attr("id");
-    let index = filterArray.indexOf(filterName);
-    if (index >= 0) {
-        filterArray.splice(index, 1);
-    } else {
-        filterArray.push(filterName);
-    }
-    console.log(filterArray.sort());
-});
-
-// Appends a custom button to the default list of buttons. 
-// Will not append new custom button if the input field is blank. Will not append previously added custom button.
-alreadyAdded = [];
-$( "#custom-filter" ).click(function() {
-    var customFilter = $("#custom-filter-input").val();
-    if (customFilter === "" || (alreadyAdded.indexOf(customFilter) !== -1)) {
-        console.log("Will not input blank field. Will not repeat last added custom filter.");
-    } else {
-        $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action");
-        alreadyAdded.push(customFilter);
-        
-        console.log(alreadyAdded)
-    }
-});
-
-// Function calls
-// ====================================================
-
-// On click of submit button have the news articles displayed
-$("#filtered-news-button").on('click', displayingArticles);
-
-$("#clear-newsfeed-button").click(function(e) {
-    $("#MainDisplay").empty();
-});
+    // ====================================================
+    $(document).on('click', '.topic', function(){
+        // Toggles between having the following class and not having it. Class causes buttons to be colored red.
+        $(this).toggleClass("list-group-item-success");
+        // The following code pushes as well as removes the id of each button from an array
+        topicName = $(this).attr("id");
+         let index = topicArray.indexOf(topicName);
+         if (index >= 0) {
+             topicArray.splice(index, 1);
+         } else {
+             topicArray.push(topicName);
+         }
+         console.log(topicArray.sort());
+    });
+     // Changes button color to red on click, and back to gray on additional click.
+    $(document).on('click', '.filter', function(){
+        // Toggles between having the following class and not having it. Class causes buttons to be colored red.
+        $(this).toggleClass("list-group-item-danger");
+        // The following code pushes as well as removes the id of each button from an array
+        filterName = $(this).attr("id");
+         let index = filterArray.indexOf(filterName);
+         if (index >= 0) {
+             filterArray.splice(index, 1);
+         } else {
+             filterArray.push(filterName);
+         }
+         console.log(filterArray.sort());
+    });
+      // Appends a custom button to the default list of buttons. 
+      // Will not append new custom button if the input field is blank. Will not append previously added custom button.
+      topicssAlreadyAdded = [];
+      $( "#custom-topic" ).click(function() {
+        var customTopic = $("#custom-topic-input").val();
+        if (customTopic === "" || (topicssAlreadyAdded.indexOf(customTopic) !== -1)) {
+             console.log("Will not input blank field. Will not repeat last added custom filter.");
+        } else {
+             $("<a>" + customTopic + "</a>").appendTo("#topics").attr('id', customTopic).addClass("list-group-item list-group-item-action topic");
+             topicssAlreadyAdded.push(customTopic);
+             $("#custom-topic-input").val('');
+             console.log(topicssAlreadyAdded)
+        }
+    });
+      filtersAlreadyAdded = [];
+    $( "#custom-filter" ).click(function() {
+        var customFilter = $("#custom-filter-input").val();
+        if (customFilter === "" || (filtersAlreadyAdded.indexOf(customFilter) !== -1)) {
+             console.log("Will not input blank field. Will not repeat last added custom filter.");
+        } else {
+             $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action filter");
+             filtersAlreadyAdded.push(customFilter);
+             $("#custom-filter-input").val('');
+             console.log(filtersAlreadyAdded)
+        }
+    });
+    $("#clear-newsfeed-button").click(function(e) {
+         $("#MainDisplay").empty();
+    });
+    $("#reset-all-buttons").click(function() {
+         $(".list-group-item-action").removeClass("list-group-item-success");
+         $(".list-group-item-action").removeClass("list-group-item-danger");
+    });
+    // On click of submit button have the news articles displayed
+    $("#filtered-news-button").on('click', displayingArticles);
+ 
 
 }); // clousure to document on ready 
