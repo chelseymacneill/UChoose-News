@@ -322,7 +322,7 @@
        } else {
             $("<a>" + customTopic + "</a>").appendTo("#topics").attr('id', customTopic).addClass("list-group-item list-group-item-action topic");
             topicssAlreadyAdded.push(customTopic);
-
+            $("#custom-topic-input").val('');
             console.log(topicssAlreadyAdded)
        }
    });
@@ -335,6 +335,7 @@
        } else {
             $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action filter");
             filtersAlreadyAdded.push(customFilter);
+            $("#custom-filter-input").val('');
 
             console.log(filtersAlreadyAdded)
        }
