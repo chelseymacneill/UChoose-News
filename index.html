@@ -102,10 +102,8 @@
 -->
 
 <!-- <script>
-
     var filterArray = [];
     var filterName = " ";
-
     // API call function
     // ====================================================
     var page = 1;
@@ -119,8 +117,6 @@
         // Query to pass to the API call 
         // top headlines 'https://newsapi.org/v2/top-headlines?q='
         // everything  https://newsapi.org/v2/everything?
-
-
         
         // Build the combined URL 
         
@@ -146,8 +142,6 @@
         if (main && mainNot) {
             queryURL = 'https://newsapi.org/v2/everything?q=' + main +   ' NOT (' + mainNot + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey 
         } else queryURL = 'https://newsapi.org/v2/top-headlines?country=' + country+  '&apiKey=' + apiKey 
-
-
         console.log(queryURL)
         
         //API Call 
@@ -167,7 +161,6 @@
                 // Storing the title of the article 
                 var pTitle = $("<h6>").text(response.articles[i].title)
                 console.log(response.articles[i].title)
-
                 // Displaying the title
                 articles.append(pTitle)
             
@@ -176,22 +169,17 @@
                 
                 //Displaying the URL 
                 articles.append(pLink)
-
                 // Append the built div to the page
                 $("#MainDisplay").append(articles);
-
                 const newelem = articles;
                 
                 // const callback = (score) => { 
                 //     console.log(newelem.attr('id') + ' score: ' + score); 
                 //     newelem.append($(`<p>${score}</p>`));
                 // }
-
                 const callback = (score) => {
-
                 if (score > 0) {
                     console.log("Positive");
-
                     var positive = $("<div>").addClass('mt-2 alert alert-success').text("This article has an overall positive tone.");
                 
                     // newelem.append($("<img src='images/positive.jpg' width='60px'/>"));
@@ -199,7 +187,6 @@
                 }
                 else if (score < 0) {
                     console.log("Negative");
-
                     var negative = $("<div>").addClass('mt-2 alert alert-danger').text("This article has an overall negative tone.");
                 
                     // newelem.append($("<img src='images/negative.jpg' width='60px'/>"));
@@ -207,7 +194,6 @@
                 }
                 else {
                     console.log("Neutral");
-
                     var neutral = $("<div>").addClass('mt-2 alert alert-warning').text("This article has an overall neutral tone.");
                 
                     // newelem.append($("<img src='images/neutral.jpg' width='60px'/>"));
@@ -216,16 +202,13 @@
                 console.log(newelem.attr('id') + ' score: ' + score);
                 // newelem.append($(`<h5>${score}</h5>`));
                 }
-
                 analyzeSentiment(response.articles[i].content, callback);
                 
             }
             page += 1;
         });
     }
-
     function analyzeSentiment(content, callback) {
-
         //API Call Google News API
         $.ajax({
             type: "POST",
@@ -241,18 +224,14 @@
                     "encodingType": "UTF8"
                 }),
             success: function (_result) {
-
                 if (_result) {
                     console.log("hooray")
                 } else {
                     console.log('ERROR');
                 }
             },
-
             error: function (_result) {
-
             }
-
         }).done((data) => callback(JSON.stringify(data.documentSentiment.score)));
     }
     
@@ -264,7 +243,6 @@
    $(document).on('click', '.list-group-item.list-group-item-action', function(){
        // Toggles between having the following class and not having it. Class causes buttons to be colored red.
        $(this).toggleClass("list-group-item-danger");
-
        // The following code pushes as well as removes the id of each button from an array
        filterName = $(this).attr("id");
         let index = filterArray.indexOf(filterName);
@@ -275,7 +253,6 @@
         }
         console.log(filterArray.sort());
    });
-
      // Appends a custom button to the default list of buttons. 
      // Will not append new custom button if the input field is blank. Will not append previously added custom button.
      alreadyAdded = [];
@@ -286,17 +263,19 @@
        } else {
             $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action");
             alreadyAdded.push(customFilter);
-
             console.log(alreadyAdded)
        }
    });
-
    // On click of submit button have the news articles displayed
    $("#filtered-news-button").on('click', displayingArticles);
-
    $("#clear-newsfeed-button").click(function(e) {
         $("#MainDisplay").empty();
    });
+
+</script> -->
+<!-- Moved the script to app.js-->
+</html>
+=======
 
 </script> -->
 <!-- Moved the script to app.js-->
