@@ -16,12 +16,14 @@
 </head>
 
 <body>
+
     
     <!-- navbar with ust an image -->
     <nav class="navbar navbar-light bg-light">
         <a class="navbar-brand" href="#">
             <img src="images/u-choose-news3.png" width="150" alt="">
         </a> 
+      <!-- Adds input from the user for thier name. Jeff this is new and ugly and not in the right place. Can you make it better?-->
         <input type="text" id="username" >
     </nav>
     
@@ -78,208 +80,93 @@
     </div>
     
 </body>
-<!-- Moved this to the head -->
-<!-- <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
--->
 
-<!-- <script>
-    
-    var filterArray = [];
-    var filterName = " ";
-    
-    // API call function
-    // ====================================================
-    var page = 1;
-    function displayingArticles() {
-        // country (optional)
-        country = 'us'
-        // Registered API call 
-        var apiKey = 'a5d3ce7509aa44c08d88ab9be804d0fb'
-        
-        
-        // Query to pass to the API call 
-        // top headlines 'https://newsapi.org/v2/top-headlines?q='
-        // everything  https://newsapi.org/v2/everything?
-        
-        
-        
-        // Build the combined URL 
-        
-        // default q 
-        country = 'us'
-        // main topic of interest
-        var main = 'Jeff Bezos'    // will become user input
-        
-        // subtopic of interest
-        var sub1 = '' // will become user input
-        
-        // main topic of disinterest
-        var mainNot = 'space' // will become user input
-        
-        // subtopic of disinterest
-        // var sub1Not = //will become user input
-        
-        // SPACES ARE INTENTIONAL AND IMPORTANT!!
-        
-        var queryURL = ''
-        
-        // Building the URL based on user choices
-        if (main && mainNot) {
-            queryURL = 'https://newsapi.org/v2/everything?q=' + main +   ' NOT (' + mainNot + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey 
-        } else queryURL = 'https://newsapi.org/v2/top-headlines?country=' + country+  '&apiKey=' + apiKey 
-        
-        
-        console.log(queryURL)
-        
-        //API Call 
-        $.ajax({
-            url : queryURL,
-            method : "GET"
-        }).then (function(response){
-            console.log(response)
-            
-            // Returns an article for 
-            for (var i = 0; i < 10; i++) {
-                
-                // Creating a div to hold the title
-                const elem = `<div id="article_${i}" class="card mb-5 pt-3 pl-3 pr-3 pb-1">`;
-                    var articles = $(elem);
-                    
-                    // Storing the title of the article 
-                    var pTitle = $("<h6>").text(response.articles[i].title)
-                        console.log(response.articles[i].title)
-                        
-                        // Displaying the title
-                        articles.append(pTitle)
-                        
-                        // Adding the URL for the article
-                        var pLink = $("<a>").text(response.articles[i].url).attr("href", response.articles[i].url).attr('target','_blank')
-                            
-                            //Displaying the URL 
-                            articles.append(pLink)
-                            
-                            // Append the built div to the page
-                            $("#MainDisplay").append(articles);
-                            
-                            const newelem = articles;
-                            
-                            // const callback = (score) => { 
-                                //     console.log(newelem.attr('id') + ' score: ' + score); 
-                                //     newelem.append($(`<p>${score}</p>`));
-                                // }
-                                
-                                const callback = (score) => {
-                                    
-                                    if (score > 0) {
-                                        console.log("Positive");
-                                        
-                                        var positive = $("<div>").addClass('mt-2 alert alert-success').text("This article has an overall positive tone.");
-                                            
-                                            // newelem.append($("<img src='images/positive.jpg' width='60px'/>"));
-                                            newelem.append($(positive));
-                                        }
-                                        else if (score < 0) {
-                                            console.log("Negative");
-                                            
-                                            var negative = $("<div>").addClass('mt-2 alert alert-danger').text("This article has an overall negative tone.");
-                                                
-                                                // newelem.append($("<img src='images/negative.jpg' width='60px'/>"));
-                                                newelem.append($(negative));
-                                            }
-                                            else {
-                                                console.log("Neutral");
-                                                
-                                                var neutral = $("<div>").addClass('mt-2 alert alert-warning').text("This article has an overall neutral tone.");
-                                                    
-                                                    // newelem.append($("<img src='images/neutral.jpg' width='60px'/>"));
-                                                    newelem.append($(neutral));
-                                                };
-                                                console.log(newelem.attr('id') + ' score: ' + score);
-                                                // newelem.append($(`<h5>${score}</h5>`));
-                                            }
-                                            
-                                            analyzeSentiment(response.articles[i].content, callback);
-                                            
-                                        }
-                                        page += 1;
-                                    });
-                                }
-                                
-                                function analyzeSentiment(content, callback) {
-                                    
-                                    //API Call Google News API
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "https://language.googleapis.com/v1/documents:analyzeSentiment?key=AIzaSyCGXL4FwDeO8GVzYxFpG3SDc9rSYAICIbQ",
-                                        contentType: "application/json; charset=utf-8",
-                                        data:
-                                        JSON.stringify({
-                                            "document": {
-                                                "type": "PLAIN_TEXT",
-                                                "language": "en",
-                                                "content": content,
-                                            },
-                                            "encodingType": "UTF8"
-                                        }),
-                                        success: function (_result) {
-                                            
-                                            if (_result) {
-                                                console.log("hooray")
-                                            } else {
-                                                console.log('ERROR');
-                                            }
-                                        },
-                                        
-                                        error: function (_result) {
-                                            
-                                        }
-                                        
-                                    }).done((data) => callback(JSON.stringify(data.documentSentiment.score)));
-                                }
-                                
-                                
-                                // Buttons 
-                                // ====================================================
-                                
-                                // Changes button color to red on click, and back to gray on additional click.
-                                $(document).on('click', '.list-group-item.list-group-item-action', function(){
-                                    // Toggles between having the following class and not having it. Class causes buttons to be colored red.
-                                    $(this).toggleClass("list-group-item-danger");
-                                    
-                                    // The following code pushes as well as removes the id of each button from an array
-                                    filterName = $(this).attr("id");
-                                    let index = filterArray.indexOf(filterName);
-                                    if (index >= 0) {
-                                        filterArray.splice(index, 1);
-                                    } else {
-                                        filterArray.push(filterName);
-                                    }
-                                    console.log(filterArray.sort());
-                                });
-                                
-                                // Appends a custom button to the default list of buttons. 
-                                // Will not append new custom button if the input field is blank. Will not append previously added custom button.
-                                alreadyAdded = [];
-                                $( "#custom-filter" ).click(function() {
-                                    var customFilter = $("#custom-filter-input").val();
-                                    if (customFilter === "" || (alreadyAdded.indexOf(customFilter) !== -1)) {
-                                        console.log("Will not input blank field. Will not repeat last added custom filter.");
-                                    } else {
-                                        $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action");
-                                        alreadyAdded.push(customFilter);
-                                        
-                                        console.log(alreadyAdded)
-                                    }
-                                });
-                                
-                                // On click of submit button have the news articles displayed
-                                $("#filtered-news-button").on('click', displayingArticles);
-                                
-                                $("#clear-newsfeed-button").click(function(e) {
-                                    $("#MainDisplay").empty();
-                                });
-                                
-                            </script> -->
-                            <!-- Moved the script to app.js-->
-                            </html>
-                            
+
+    <!-- navbar with ust an image -->
+   <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="#">
+        <img src="images/u-choose-news3.png" width="150" alt="">
+      </a>
+   </nav>
+   
+   <div class="my-5 container">
+       <div class="card">
+   
+           <h5 class="card-header">News Feed</h5>
+   
+           <div class="card-body row">
+   
+               <div class="col-4">
+   
+                   <div class="list-group mb-3" id="topics">
+                       <a href="" class="list-group-item active disabled" aria-disabled="true">Choose Topics:</a>
+                       <a id="Politics" class="list-group-item list-group-item-action topic" >Politics</a>
+                       <a id="Economy" class="list-group-item list-group-item-action topic">Economy</a>
+                       <a id="Technology" class="list-group-item list-group-item-action topic">Technology</a>
+                       <a id="Education" class="list-group-item list-group-item-action topic">Education</a>
+                       <a id="Style" class="list-group-item list-group-item-action topic">Style</a>
+                       <a id="Travel" class="list-group-item list-group-item-action topic">Travel</a>
+                       <a id="Sports" class="list-group-item list-group-item-action topic">Sports</a>
+                       <a id="Opinion" class="list-group-item list-group-item-action topic">Opinion</a>
+                       <a id="Film" class="list-group-item list-group-item-action topic">Film</a>
+                       <a id="World News" class="list-group-item list-group-item-action topic">World News</a>
+                   </div>
+                   
+                   <div class="input-group mb-3 my-5">
+   
+                       <div class="input-group-prepend">
+                           <button style="box-shadow: none" class="btn btn-outline-secondary" type="button" id="custom-topic">Add Custom Topic</button>
+                       </div>
+   
+                       <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="custom-topic-input">
+   
+                   </div>
+   
+                   <div class="list-group" id="filters">
+                       <a href="" class="list-group-item active disabled" aria-disabled="true">Apply Filters:</a>
+                       <a id="War" class="list-group-item list-group-item-action filter" >War</a>
+                       <a id="Terrorism" class="list-group-item list-group-item-action filter">Terrorism</a>
+                       <a id="Shootings" class="list-group-item list-group-item-action filter">Shootings</a>
+                       <a id="Politics" class="list-group-item list-group-item-action filter">Politics</a>
+                       <a id="Donald-Trump" class="list-group-item list-group-item-action filter">Donald Trump</a>
+                       <a id="Kanye" class="list-group-item list-group-item-action filter">Kanye</a>
+                       <a id="Movie-Spoilers" class="list-group-item list-group-item-action filter">Movie Spoliers</a>
+                       <a id="Sports-Spoilers" class="list-group-item list-group-item-action filter">Sports Spoilers</a>
+                       <a id="Natural-Disasters" class="list-group-item list-group-item-action filter">Natural Disasters</a>
+                       <a id="Threat-of-Nuclear-War" class="list-group-item list-group-item-action filter">Threat of Nuclear War</a>
+                   </div>
+   
+                   <div class="input-group mb-3 my-5">
+   
+                       <div class="input-group-prepend">
+                           <button style="box-shadow: none" class="btn btn-outline-secondary" type="button" id="custom-filter">Add Custom Filter</button>
+                       </div>
+   
+                       <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="custom-filter-input">
+   
+                   </div>
+   
+                   <a id="reset-all-buttons" style="color:white" class="btn btn-secondary mb-2">Reset All Buttons</a>
+   
+                   <a id="clear-newsfeed-button" style="color:white" class="btn btn-secondary mb-2">Clear News Feed</a>
+   
+                   <a id="filtered-news-button" style="color:white" class="btn btn-primary mb-2">Push News Feed</a>
+   
+               </div>
+   
+               <div class="col-8">
+                 <div id="MainDisplay"></div>
+               </div>
+   
+           </div>
+   
+       </div>
+   
+   </div>
+   
+   </body>
+
+</html>
+
+
+

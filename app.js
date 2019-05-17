@@ -1,8 +1,12 @@
 $(document).ready(function()  {
     
+
     
     // Global Variables 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    var topicArray = [];
+    var topicName = " "
     var filterArray = [];
     var filterName = " ";
     var page = 1;
@@ -75,6 +79,7 @@ $(document).ready(function()  {
         console.log(filterArray)
         
         
+
         //API Call to Google News API
         $.ajax({
             url : queryURL,
@@ -83,6 +88,36 @@ $(document).ready(function()  {
             
             console.log(response)
             console.log(queryURL)
+          
+        // Returns an article for 
+        for (var i = 0; i < 10; i++) {
+            
+            // Creating a div to hold the title
+            var articleContent = $("<p>").text(response.articles[i].content);
+            var fullArticleNotice = $("<p>").text("Full article:").addClass("mb-0");
+            // Creating a div to hold the title
+            const elem = `<div id="article_${i}" class="card mb-5 pt-3 pl-3 pr-3 pb-1">`;
+            var articles = $(elem);
+            
+            // Storing the title of the article 
+            var pTitle = $("<h6>").text(response.articles[i].title)
+            console.log(response.articles[i].title)
+            // Displaying the title
+            articles.append(pTitle)
+        
+            // Adding the URL for the article
+            var pLink = $("<a>").text(response.articles[i].url).attr("href", response.articles[i].url).attr('target','_blank').addClass("mb-3");
+            
+            //Displaying the URL 
+            
+            articles.append(articleContent)
+            articles.append(fullArticleNotice)
+            articles.append(pLink)
+            
+            // Append the built div to the page
+            $("#MainDisplay").prepend(articles);
+            const newelem = articles;
+
             
             // Loops through the response and appends them to the UI
             for (var i = 0; i < 10; i++) {
@@ -187,50 +222,83 @@ $(document).ready(function()  {
     
     // On Click Function Calls
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
-    // Changes button color to red on click, and back to gray on additional click.
-    $(document).on('click', '.list-group-item.list-group-item-action', function(){
+       
+      // Topic Array
+      $(document).on('click', '.topic', function(){
+        // Toggles between having the following class and not having it. Class causes buttons to be colored red.
+        $(this).toggleClass("list-group-item-success");
+        // The following code pushes as well as removes the id of each button from an array
+        topicName = $(this).attr("id");
+         let index = topicArray.indexOf(topicName);
+         if (index >= 0) {
+             topicArray.splice(index, 1);
+         } else {
+             topicArray.push(topicName);
+         }
+         console.log(topicArray.sort());
+    });
+      
+     // Filter Array
+     // Changes button color to red on click, and back to gray on additional click.
+    $(document).on('click', '.filter', function(){
         // Toggles between having the following class and not having it. Class causes buttons to be colored red.
         $(this).toggleClass("list-group-item-danger");
-        
         // The following code pushes as well as removes the id of each button from an array
         filterName = $(this).attr("id");
-        let index = filterArray.indexOf(filterName);
-        if (index >= 0) {
-            filterArray.splice(index, 1);
-        } else {
-            filterArray.push(filterName);
-        }
-        console.log(filterArray.sort());
+         let index = filterArray.indexOf(filterName);
+         if (index >= 0) {
+             filterArray.splice(index, 1);
+         } else {
+             filterArray.push(filterName);
+         }
+         console.log(filterArray.sort());
     });
     
-    // Appends a custom button to the default list of buttons. 
-    // Will not append new custom button if the input field is blank. Will not append previously added custom button.
-    alreadyAdded = [];
+      // Appends a custom button to the default list of buttons. 
+      // Will not append new custom button if the input field is blank. Will not append previously added custom button.
+      topicssAlreadyAdded = [];
+      $( "#custom-topic" ).click(function() {
+        var customTopic = $("#custom-topic-input").val();
+        if (customTopic === "" || (topicssAlreadyAdded.indexOf(customTopic) !== -1)) {
+             console.log("Will not input blank field. Will not repeat last added custom filter.");
+        } else {
+             $("<a>" + customTopic + "</a>").appendTo("#topics").attr('id', customTopic).addClass("list-group-item list-group-item-action topic");
+             topicssAlreadyAdded.push(customTopic);
+             $("#custom-topic-input").val('');
+             console.log(topicssAlreadyAdded)
+        }
+    });
+      filtersAlreadyAdded = [];
     $( "#custom-filter" ).click(function() {
-        console.log('this')
         var customFilter = $("#custom-filter-input").val();
-        if (customFilter === "" || (alreadyAdded.indexOf(customFilter) !== -1)) {
-            console.log("Will not input blank field. Will not repeat last added custom filter.");
+        if (customFilter === "" || (filtersAlreadyAdded.indexOf(customFilter) !== -1)) {
+             console.log("Will not input blank field. Will not repeat last added custom filter.");
         } else {
-            $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action");
-            alreadyAdded.push(customFilter);
-            
-            console.log(alreadyAdded)
+             $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action filter");
+             filtersAlreadyAdded.push(customFilter);
+             $("#custom-filter-input").val('');
+             console.log(filtersAlreadyAdded)
         }
     });
     
+         $("#clear-newsfeed-button").click(function(e) {
+         $("#MainDisplay").empty();
+    });
+    $("#reset-all-buttons").click(function() {
+         $(".list-group-item-action").removeClass("list-group-item-success");
+         $(".list-group-item-action").removeClass("list-group-item-danger");
+    });
+      
+    // On click of submit button have the news articles displayed
+    $("#filtered-news-button").on('click', displayingArticles); 
+      
     // On click of submit button have the news articles displayed
     $("#filtered-news-button").on('click', displayingArticles);
-    
-    // Clears the newsfeed
-    $("#clear-newsfeed-button").click(function(e) {
-        $("#MainDisplay").empty();
-    });
     
     // Save my settings button stores the users name once its clicked
     $("#save-my-settings").on("click", function() {
         
+
         var username = $('#username').val().trim()
         
         localStorage.setItem('username', username)
