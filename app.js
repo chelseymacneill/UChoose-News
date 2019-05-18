@@ -1,15 +1,20 @@
 $(document).ready(function()  {
     
-
+    
     
     // Global Variables 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+    
     var topicArray = [];
+    //var topicArrayFinal = [];
     var topicName = " "
     var filterArray = [];
+    //var filterArrayFinal = [];
     var filterName = " ";
     var page = 1;
+    
+    
+    
     
     // Initializing Firebase real time database
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -42,44 +47,47 @@ $(document).ready(function()  {
         // default q 
         country = 'us' 
         
-        // main topic of interest
-        var mainTopic = 'Alabama'    // will become user input
+        // text manipulation for the topic array
+        for (var i = 0; i < topicArray.length -1 ; i++) {
+            topicArrayFinal = topicArray[i] + ' AND ' + topicArray[topicArray.length -1]
+            console.log('Topic Array' + topicArrayFinal)
+        };
         
-        // Array that holds topic/s of disinterest
-        // Should this be wrapped in a function
-        
-        // In class manual version of 
-        /*var filteredTopicsRaw = ['Impeach', 'Crazy']; // will become user input
-        var filteredTopics = [];
-        
-        for (var i = 0; i < filteredTopicsRaw.length -1 ; i++) {
-            filteredTopics = filteredTopicsRaw[i] + ' OR ' + filteredTopicsRaw[filteredTopicsRaw.length -1]
+        // text manipulation for the filter array
+        for (var i = 0; i < filterArray.length -1 ; i++) {
+            var filterArrayFinal = filterArray[i] + ' OR ' + filterArray[filterArray.length -1]
             //return filteredTopics
-        };*/
+            console.log('filter Array' + filterArrayFinal)
+        };
         
-        //console.log(filterArray)
+        // Logging for testing
+        console.log('filter length before ' + filterArrayFinal.length)
+        console.log('topic length before' + topicArrayFinal.length)
         
         // Building the URL based on user choices
         // SPACES ARE INTENTIONAL AND IMPORTANT in the QUERY URL!!
-        if (mainTopic && filterArray.length >= 1) {
-            queryURL = 'https://newsapi.org/v2/everything?q=' + mainTopic +   ' NOT (' + filterArray + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
-            console.log('1' + queryURL)
-        } else if (!mainTopic && filterArray.length >= 1) {
-            queryURL = 'https://newsapi.org/v2/everything?q= NOT (' + filterArray + ')&page=' + page + '&apiKey=' + apiKey
+        if (topicArrayFinal.length > 0 && filterArrayFinal.length > 0) {
+          queryURL = 'https://newsapi.org/v2/everything?q=' + topicArrayFinal +   ' NOT (' + filterArrayFinal + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
+           console.log('1' + queryURL)
+        } else if (topicArrayFinal.length === 0 && filterArrayFinal.length > 0) {
+            queryURL = 'https://newsapi.org/v2/everything?q=' + topicArrayFinal +   ' NOT (' + filterArrayFinal + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
             console.log('2' + queryURL)
-        } else if  (!mainTopic && filterArray.length === 0) {
+        } else if  (topicArrayFinal.length > 0 && filterArrayFinal.length === 0) {
+            queryURL = 'https://newsapi.org/v2/everything?q=' + topicArrayFinal +   ' NOT (' + filterArrayFinal + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
+            console.log('3'+ queryURL)
+        } else if (topicArrayFinal.length === 0 && filterArrayFinal.length === 0) {
             // Just show them trending stories for the US 
             queryURL = 'https://newsapi.org/v2/top-headlines?country=' + country +  '&page=' + page + '&apiKey=' + apiKey 
-            console.log('3'+ queryURL)
-        } else if (mainTopic && filterArray.length === 0) {
-            queryURL = 'https://newsapi.org/v2/everything?q=' + mainTopic +  '&page=' + page + '&language=en' + '&apiKey=' + apiKey
             console.log('4'+ queryURL)
         } else console.log('you broke it')
-        console.log('filter lenght' + filterArray.length)
-        console.log(filterArray)
+        
+        // Logging for testing
+        console.log('filter length after ' + filterArrayFinal.length)
+        console.log('topic length after' + topicArrayFinal.length)
         
         
-
+        
+        
         //API Call to Google News API
         $.ajax({
             url : queryURL,
@@ -88,103 +96,104 @@ $(document).ready(function()  {
             
             console.log(response)
             console.log(queryURL)
-          
-        // Returns an article for 
-        for (var i = 0; i < 10; i++) {
             
-            // Creating a div to hold the title
-            var articleContent = $("<p>").text(response.articles[i].content);
-            var fullArticleNotice = $("<p>").text("Full article:").addClass("mb-0");
-            // Creating a div to hold the title
-            const elem = `<div id="article_${i}" class="card mb-5 pt-3 pl-3 pr-3 pb-1">`;
-            var articles = $(elem);
-            
-            // Storing the title of the article 
-            var pTitle = $("<h6>").text(response.articles[i].title)
-            console.log(response.articles[i].title)
-            // Displaying the title
-            articles.append(pTitle)
-        
-            // Adding the URL for the article
-            var pLink = $("<a>").text(response.articles[i].url).attr("href", response.articles[i].url).attr('target','_blank').addClass("mb-3");
-            
-            //Displaying the URL 
-            
-            articles.append(articleContent)
-            articles.append(fullArticleNotice)
-            articles.append(pLink)
-            
-            // Append the built div to the page
-            $("#MainDisplay").prepend(articles);
-            const newelem = articles;
-
-            
-            // Loops through the response and appends them to the UI
+            // Returns an article for 
             for (var i = 0; i < 10; i++) {
                 
                 // Creating a div to hold the title
-                var articles = $("<div id='articles'>");
+                var articleContent = $("<p>").text(response.articles[i].content);
+                var fullArticleNotice = $("<p>").text("Full article:").addClass("mb-0");
+                // Creating a div to hold the title
+                const elem = `<div id="article_${i}" class="card mb-5 pt-3 pl-3 pr-3 pb-1">`;
+                var articles = $(elem);
                 
                 // Storing the title of the article 
-                var pTitle = $("<p>").text("Title: " + response.articles[i].title)
+                var pTitle = $("<h6>").text(response.articles[i].title)
                 console.log(response.articles[i].title)
-                
                 // Displaying the title
                 articles.append(pTitle)
                 
                 // Adding the URL for the article
-                var pLink = $("<p>").text("Link to Article:" + response.articles[i].url)
+                var pLink = $("<a>").text(response.articles[i].url).attr("href", response.articles[i].url).attr('target','_blank').addClass("mb-3");
                 
                 //Displaying the URL 
+                
+                articles.append(articleContent)
+                articles.append(fullArticleNotice)
                 articles.append(pLink)
                 
                 // Append the built div to the page
-                $("#MainDisplay").append(articles);
+                $("#MainDisplay").prepend(articles);
                 const newelem = articles;
                 
-                // const callback = (score) => { 
-                //     console.log(newelem.attr('id') + ' score: ' + score); 
-                //     newelem.append($(`<p>${score}</p>`));
-                // }
                 
-                // Buckets the results from the score into positive, neutral, or negative sentiment buckets and displays them in the UI
-                const callback = (score) => {
+                // Loops through the response and appends them to the UI
+                for (var i = 0; i < 10; i++) {
                     
-                    if (score > 0) {
-                        console.log("Positive");
+                    // Creating a div to hold the title
+                    var articles = $("<div id='articles'>");
+                    
+                    // Storing the title of the article 
+                    var pTitle = $("<p>").text("Title: " + response.articles[i].title)
+                    console.log(response.articles[i].title)
+                    
+                    // Displaying the title
+                    articles.append(pTitle)
+                    
+                    // Adding the URL for the article
+                    var pLink = $("<p>").text("Link to Article:" + response.articles[i].url)
+                    
+                    //Displaying the URL 
+                    articles.append(pLink)
+                    
+                    // Append the built div to the page
+                    $("#MainDisplay").append(articles);
+                    const newelem = articles;
+                    
+                    // const callback = (score) => { 
+                    //     console.log(newelem.attr('id') + ' score: ' + score); 
+                    //     newelem.append($(`<p>${score}</p>`));
+                    // }
+                    
+                    // Buckets the results from the score into positive, neutral, or negative sentiment buckets and displays them in the UI
+                    const callback = (score) => {
                         
-                        var positive = $("<div>").addClass('mt-2 alert alert-success').text("This article has an overall positive tone.");
-                        
-                        // newelem.append($("<img src='images/positive.jpg' width='60px'/>"));
-                        newelem.append($(positive));
+                        if (score > 0) {
+                            console.log("Positive");
+                            
+                            var positive = $("<div>").addClass('mt-2 alert alert-success').text("This article has an overall positive tone.");
+                            
+                            // newelem.append($("<img src='images/positive.jpg' width='60px'/>"));
+                            newelem.append($(positive));
+                        }
+                        else if (score < 0) {
+                            console.log("Negative");
+                            
+                            var negative = $("<div>").addClass('mt-2 alert alert-danger').text("This article has an overall negative tone.");
+                            
+                            // newelem.append($("<img src='images/negative.jpg' width='60px'/>"));
+                            newelem.append($(negative));
+                        }
+                        else {
+                            console.log("Neutral");
+                            
+                            var neutral = $("<div>").addClass('mt-2 alert alert-warning').text("This article has an overall neutral tone.");
+                            
+                            // newelem.append($("<img src='images/neutral.jpg' width='60px'/>"));
+                            newelem.append($(neutral));
+                        };
+                        console.log(newelem.attr('id') + ' score: ' + score);
+                        // newelem.append($(`<h5>${score}</h5>`));
                     }
-                    else if (score < 0) {
-                        console.log("Negative");
-                        
-                        var negative = $("<div>").addClass('mt-2 alert alert-danger').text("This article has an overall negative tone.");
-                        
-                        // newelem.append($("<img src='images/negative.jpg' width='60px'/>"));
-                        newelem.append($(negative));
-                    }
-                    else {
-                        console.log("Neutral");
-                        
-                        var neutral = $("<div>").addClass('mt-2 alert alert-warning').text("This article has an overall neutral tone.");
-                        
-                        // newelem.append($("<img src='images/neutral.jpg' width='60px'/>"));
-                        newelem.append($(neutral));
-                    };
-                    console.log(newelem.attr('id') + ' score: ' + score);
-                    // newelem.append($(`<h5>${score}</h5>`));
+                    
+                    // Calls the analyzeSentiment function and passes content from the Google API call to it
+                    analyzeSentiment(response.articles[i].content, callback);
+                    
                 }
-                
-                // Calls the analyzeSentiment function and passes content from the Google API call to it
-                analyzeSentiment(response.articles[i].content, callback);
-                
-            }
-            // Advances the page pulled from Google News API so it doesn't just pull the same articles over and over
-            page += 1;
-        });
+                // Advances the page pulled from Google News API so it doesn't just pull the same articles over and over
+                page += 1;
+            };
+        })
     };
     
     // Function for Calling the Call Google NLP API
@@ -222,83 +231,83 @@ $(document).ready(function()  {
     
     // On Click Function Calls
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-       
-      // Topic Array
-      $(document).on('click', '.topic', function(){
+    
+    // Topic Array
+    $(document).on('click', '.topic', function(){
         // Toggles between having the following class and not having it. Class causes buttons to be colored red.
         $(this).toggleClass("list-group-item-success");
         // The following code pushes as well as removes the id of each button from an array
         topicName = $(this).attr("id");
-         let index = topicArray.indexOf(topicName);
-         if (index >= 0) {
-             topicArray.splice(index, 1);
-         } else {
-             topicArray.push(topicName);
-         }
-         console.log(topicArray.sort());
+        let index = topicArray.indexOf(topicName);
+        if (index >= 0) {
+            topicArray.splice(index, 1);
+        } else {
+            topicArray.push(topicName);
+        }
+        console.log('topic array' + topicArray.sort());
     });
-      
-     // Filter Array
-     // Changes button color to red on click, and back to gray on additional click.
+    
+    // Filter Array
+    // Changes button color to red on click, and back to gray on additional click.
     $(document).on('click', '.filter', function(){
         // Toggles between having the following class and not having it. Class causes buttons to be colored red.
         $(this).toggleClass("list-group-item-danger");
         // The following code pushes as well as removes the id of each button from an array
         filterName = $(this).attr("id");
-         let index = filterArray.indexOf(filterName);
-         if (index >= 0) {
-             filterArray.splice(index, 1);
-         } else {
-             filterArray.push(filterName);
-         }
-         console.log(filterArray.sort());
+        let index = filterArray.indexOf(filterName);
+        if (index >= 0) {
+            filterArray.splice(index, 1);
+        } else {
+            filterArray.push(filterName);
+        }
+        console.log('filter Array' + filterArray.sort());
     });
     
-      // Appends a custom button to the default list of buttons. 
-      // Will not append new custom button if the input field is blank. Will not append previously added custom button.
-      topicssAlreadyAdded = [];
-      $( "#custom-topic" ).click(function() {
+    // Appends a custom button to the default list of buttons. 
+    // Will not append new custom button if the input field is blank. Will not append previously added custom button.
+    topicssAlreadyAdded = [];
+    $( "#custom-topic" ).click(function() {
         var customTopic = $("#custom-topic-input").val();
         if (customTopic === "" || (topicssAlreadyAdded.indexOf(customTopic) !== -1)) {
-             console.log("Will not input blank field. Will not repeat last added custom filter.");
+            console.log("Will not input blank field. Will not repeat last added custom filter.");
         } else {
-             $("<a>" + customTopic + "</a>").appendTo("#topics").attr('id', customTopic).addClass("list-group-item list-group-item-action topic");
-             topicssAlreadyAdded.push(customTopic);
-             $("#custom-topic-input").val('');
-             console.log(topicssAlreadyAdded)
+            $("<a>" + customTopic + "</a>").appendTo("#topics").attr('id', customTopic).addClass("list-group-item list-group-item-action topic");
+            topicssAlreadyAdded.push(customTopic);
+            $("#custom-topic-input").val('');
+            console.log('topics already added' + topicssAlreadyAdded)
         }
     });
-      filtersAlreadyAdded = [];
+    filtersAlreadyAdded = [];
     $( "#custom-filter" ).click(function() {
         var customFilter = $("#custom-filter-input").val();
         if (customFilter === "" || (filtersAlreadyAdded.indexOf(customFilter) !== -1)) {
-             console.log("Will not input blank field. Will not repeat last added custom filter.");
+            console.log("Will not input blank field. Will not repeat last added custom filter.");
         } else {
-             $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action filter");
-             filtersAlreadyAdded.push(customFilter);
-             $("#custom-filter-input").val('');
-             console.log(filtersAlreadyAdded)
+            $("<a>" + customFilter + "</a>").appendTo("#filters").attr('id', customFilter).addClass("list-group-item list-group-item-action filter");
+            filtersAlreadyAdded.push(customFilter);
+            $("#custom-filter-input").val('');
+            console.log('filters already added' + filtersAlreadyAdded)
         }
     });
     
-         $("#clear-newsfeed-button").click(function(e) {
-         $("#MainDisplay").empty();
+    $("#clear-newsfeed-button").click(function(e) {
+        $("#MainDisplay").empty();
     });
     $("#reset-all-buttons").click(function() {
-         $(".list-group-item-action").removeClass("list-group-item-success");
-         $(".list-group-item-action").removeClass("list-group-item-danger");
+        $(".list-group-item-action").removeClass("list-group-item-success");
+        $(".list-group-item-action").removeClass("list-group-item-danger");
     });
-      
+    
     // On click of submit button have the news articles displayed
     $("#filtered-news-button").on('click', displayingArticles); 
-      
+    
     // On click of submit button have the news articles displayed
     $("#filtered-news-button").on('click', displayingArticles);
     
     // Save my settings button stores the users name once its clicked
     $("#save-my-settings").on("click", function() {
         
-
+        
         var username = $('#username').val().trim()
         
         localStorage.setItem('username', username)
