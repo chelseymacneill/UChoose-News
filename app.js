@@ -52,43 +52,44 @@ $(document).ready(function()  {
         if ((!Array.isArray(topicArray) || !topicArray.length) && (!Array.isArray(filterArray) || !filterArray.length)) {
             // Just show them trending stories for the US 
             queryURL = 'https://newsapi.org/v2/top-headlines?country=' + country +  '&page=' + page + '&apiKey=' + apiKey 
-            console.log('1'+ queryURL)
+            console.log('1: '+ queryURL)
             console.log( topicArray + ' ' + filterArray)
             
         } else if ((!Array.isArray(topicArray) || !topicArray.length) && filterArray.length > 0) {
             // text manipulation for the filter array
-            for (var i = 0; i < filterArray.length -1 ; i++) {
-                filterArray= filterArray[i] + ' OR ' + filterArray[filterArray.length -1]
+            var filterArrayFinal = filterArray[0]
+            for (var i = 1; i < filterArray.length; i++) {
+                filterArrayFinal = ' OR ' + filterArray[i];
             }
-            
-            queryURL = 'https://newsapi.org/v2/everything?q= NOT (' + filterArray + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
-            
-            console.log('2' + queryURL)
+            queryURL = 'https://newsapi.org/v2/everything?q= NOT (' + filterArrayFinal + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
+            console.log('2: ' + queryURL)
             console.log( topicArray + ' ' + filterArray)
+            
             
         } else if  (topicArray.length > 0 && (!Array.isArray(filterArray) || !filterArray.length)) {
             // text manipulation for the topic array
-            for (var i = 0; i < topicArray.length -1 ; i++) {
-                topicArray = topicArray[i] + ' AND ' + topicArray[topicArray.length -1]
-            };
-            
-            queryURL = 'https://newsapi.org/v2/everything?q=' + topicArray + '&page=' + page + '&language=en' + '&apiKey=' + apiKey
-            
-            console.log('3'+ queryURL)
+            var topicArrayFinal = topicArray[0]
+            for (var i = 1; i < topicArray.length ; i++) {
+                topicArrayFinal = ' AND ' + topicArray[i]   
+            }
+            queryURL = 'https://newsapi.org/v2/everything?q=' + topicArrayFinal + '&page=' + page + '&language=en' + '&apiKey=' + apiKey
+            console.log('3: '+ queryURL)
             console.log( topicArray + ' ' + filterArray)
+            
             
         } else if (topicArray.length > 0 && filterArray.length > 0) {
             
-            for (var i = 0; i < topicArray.length -1 ; i++) {
-                topicArray = topicArray[i] + ' AND ' + topicArray[topicArray.length -1]
-            };
+            var topicArrayFinal = topicArray[0];
+            for (var i = 1; i < topicArray.length ; i++) {
+                topicArrayFinal = ' AND ' + topicArray[i]   
+            }
             
-            // text manipulation for the filter array
-            for (var i = 0; i < filterArray.length -1 ; i++) {
-                filterArray = filterArray[i] + ' OR ' + filterArray[filterArray.length -1]
-            };
+            var filterArrayFinal = filterArray[0];
+            for (var i = 1; i < filterArray.length; i++) {
+                filterArrayFinal = ' OR ' + filterArray[i];
+            }
             
-            queryURL = 'https://newsapi.org/v2/everything?q=' + topicArray +   ' NOT (' + filterArray + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
+            queryURL = 'https://newsapi.org/v2/everything?q=' + topicArrayFinal +   ' NOT (' + filterArrayFinal + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
             
             console.log('4' + queryURL)
             console.log( topicArray + ' ' + filterArray)
@@ -98,7 +99,7 @@ $(document).ready(function()  {
         function wordCount(content) {
             var characterCount1 = '';
             for (j = content.length - 15; j <= content.length; j++) {
- 
+                
                 if (!isNaN(content.charAt(j))) {
                     characterCount1 += content.charAt(j)
                 }
@@ -115,7 +116,7 @@ $(document).ready(function()  {
             //           console.log(effectiveTime);
             //           console.log("'" + characterCount2 + "'");
             //           console.log(typeof characterCount2);
-                       return effectiveTime;
+            return effectiveTime;
         }
         
         //API Call to Google News API
@@ -131,9 +132,9 @@ $(document).ready(function()  {
             for (var i = 0; i < 10; i++) {
                 
                 var content = response.articles[i].content;
-
+                
                 var contentCount = wordCount(content);
-
+                
                 // Creating a div to hold the title
                 var articleContent = $("<p>").text(response.articles[i].content);
                 var fullArticleNotice = $("<p>").text("Full article:").addClass("mb-0");
@@ -314,13 +315,13 @@ $(document).ready(function()  {
         
         //
         localStorage.setItem('username', username)
-
+        
         // Stores local storage username in the user variable
         var user = localStorage.getItem("username");
         
         // sets the user node
         var ref = '/' + user
-
+        
         console.log('User settings saved in Firebase')
         // **** Store Click Data to Firebase in a JSON property called clickCount *****
         // **** Note how we are using the Firebase .set() method ****
