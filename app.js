@@ -95,6 +95,28 @@ $(document).ready(function()  {
             
         } else console.log('you broke it')
         
+        function wordCount(content) {
+            var characterCount1 = '';
+            for (j = content.length - 15; j <= content.length; j++) {
+ 
+                if (!isNaN(content.charAt(j))) {
+                    characterCount1 += content.charAt(j)
+                }
+            }
+            var characterCount2 = ((parseInt(characterCount1.trim())) + 260) / 5;
+            //           characterCount2 += 260;    characters are truncated
+            //           characterCount2 /= 5;      average word is about 5 letters
+            var wpm = 200,
+            estimatedRaw = characterCount2 / wpm;
+            minutes = Math.round(estimatedRaw);
+            var effectiveTime =  $("<h6>").text((minutes < 1) ? "Under 1 minute read" : minutes + " min read");
+            //           console.log(characterCount2);
+            //           console.log(estimatedRaw);
+            //           console.log(effectiveTime);
+            //           console.log("'" + characterCount2 + "'");
+            //           console.log(typeof characterCount2);
+                       return effectiveTime;
+        }
         
         //API Call to Google News API
         $.ajax({
@@ -108,6 +130,10 @@ $(document).ready(function()  {
             // Returns an article for 
             for (var i = 0; i < 10; i++) {
                 
+                var content = response.articles[i].content;
+
+                var contentCount = wordCount(content);
+
                 // Creating a div to hold the title
                 var articleContent = $("<p>").text(response.articles[i].content);
                 var fullArticleNotice = $("<p>").text("Full article:").addClass("mb-0");
@@ -129,6 +155,7 @@ $(document).ready(function()  {
                 articles.append(articleContent)
                 articles.append(fullArticleNotice)
                 articles.append(pLink)
+                articles.append(contentCount);
                 
                 // Append the built div to the page
                 $("#MainDisplay").prepend(articles);
