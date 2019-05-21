@@ -12,22 +12,22 @@ $(document).ready(function()  {
     var page = 1;
     
     
-    // Initializing Firebase real time database
+    //Initializing Firebase real time database
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    // //Config
-    // const firebaseConfig = {
-    //     apiKey: "AIzaSyChB3IDp6UAq-V_TP4GsPpw0CxpRyXiYT0",
-    //     authDomain: "uchoosenews-c7c3a.firebaseapp.com",
-    //     databaseURL: "https://uchoosenews-c7c3a.firebaseio.com",
-    //     storageBucket: "uchoosenews-c7c3a.appspot.com",
-    // };
+    //Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyChB3IDp6UAq-V_TP4GsPpw0CxpRyXiYT0",
+        authDomain: "uchoosenews-c7c3a.firebaseapp.com",
+        databaseURL: "https://uchoosenews-c7c3a.firebaseio.com",
+        storageBucket: "uchoosenews-c7c3a.appspot.com",
+    };
     
     // // Initialize Firebase
-    // firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     
-    // // Get a reference to the database service
-    // var database = firebase.database();
+    // Get a reference to the database service
+    var database = firebase.database();
     
     // Weblink to Firebase 
     // https://uchoosenews-c7c3a.firebaseio.com/
@@ -54,7 +54,7 @@ $(document).ready(function()  {
             queryURL = 'https://newsapi.org/v2/top-headlines?country=' + country +  '&page=' + page + '&apiKey=' + apiKey 
             console.log('1'+ queryURL)
             console.log( topicArray + ' ' + filterArray)
-
+            
         } else if ((!Array.isArray(topicArray) || !topicArray.length) && filterArray.length > 0) {
             // text manipulation for the filter array
             for (var i = 0; i < filterArray.length -1 ; i++) {
@@ -92,7 +92,7 @@ $(document).ready(function()  {
             
             console.log('4' + queryURL)
             console.log( topicArray + ' ' + filterArray)
-
+            
         } else console.log('you broke it')
         
         
@@ -134,42 +134,42 @@ $(document).ready(function()  {
                 $("#MainDisplay").prepend(articles);
                 const newelem = articles;
                 
-                    // Buckets the results from the score into positive, neutral, or negative sentiment buckets and displays them in the UI
-                    const callback = (score) => {
-                        
-                        if (score > 0) {
-                            console.log("Positive");
-                            
-                            var positive = $("<div>").addClass('mt-2 alert alert-success').text("This article has an overall positive tone.");
-                            
-                            // newelem.append($("<img src='images/positive.jpg' width='60px'/>"));
-                            newelem.append($(positive));
-                        }
-                        else if (score < 0) {
-                            console.log("Negative");
-                            
-                            var negative = $("<div>").addClass('mt-2 alert alert-danger').text("This article has an overall negative tone.");
-                            
-                            // newelem.append($("<img src='images/negative.jpg' width='60px'/>"));
-                            newelem.append($(negative));
-                        }
-                        else {
-                            console.log("Neutral");
-                            
-                            var neutral = $("<div>").addClass('mt-2 alert alert-warning').text("This article has an overall neutral tone.");
-                            
-                            // newelem.append($("<img src='images/neutral.jpg' width='60px'/>"));
-                            newelem.append($(neutral));
-                        };
-                        console.log(newelem.attr('id') + ' score: ' + score);
-                        // newelem.append($(`<h5>${score}</h5>`));
-                    }
+                // Buckets the results from the score into positive, neutral, or negative sentiment buckets and displays them in the UI
+                const callback = (score) => {
                     
-                    // Calls the analyzeSentiment function and passes content from the Google API call to it
-                    analyzeSentiment(response.articles[i].content, callback);
+                    if (score > 0) {
+                        console.log("Positive");
+                        
+                        var positive = $("<div>").addClass('mt-2 alert alert-success').text("This article has an overall positive tone.");
+                        
+                        // newelem.append($("<img src='images/positive.jpg' width='60px'/>"));
+                        newelem.append($(positive));
+                    }
+                    else if (score < 0) {
+                        console.log("Negative");
+                        
+                        var negative = $("<div>").addClass('mt-2 alert alert-danger').text("This article has an overall negative tone.");
+                        
+                        // newelem.append($("<img src='images/negative.jpg' width='60px'/>"));
+                        newelem.append($(negative));
+                    }
+                    else {
+                        console.log("Neutral");
+                        
+                        var neutral = $("<div>").addClass('mt-2 alert alert-warning').text("This article has an overall neutral tone.");
+                        
+                        // newelem.append($("<img src='images/neutral.jpg' width='60px'/>"));
+                        newelem.append($(neutral));
+                    };
+                    console.log(newelem.attr('id') + ' score: ' + score);
+                    // newelem.append($(`<h5>${score}</h5>`));
                 }
-                // Advances the page pulled from Google News API so it doesn't just pull the same articles over and over
-                page += 1;
+                
+                // Calls the analyzeSentiment function and passes content from the Google API call to it
+                analyzeSentiment(response.articles[i].content, callback);
+            }
+            // Advances the page pulled from Google News API so it doesn't just pull the same articles over and over
+            page += 1;
         });
     };
     
@@ -282,21 +282,26 @@ $(document).ready(function()  {
     
     // Save my settings button stores the users name once its clicked
     $("#save-my-settings").on("click", function() {
-        
-        
+        //
         var username = $('#username').val().trim()
         
+        //
         localStorage.setItem('username', username)
-        
+
+        // Stores local storage username in the user variable
         var user = localStorage.getItem("username");
+        
+        // sets the user node
         var ref = '/' + user
-        console.log('nailedit)')
+
+        console.log('User settings saved in Firebase')
         // **** Store Click Data to Firebase in a JSON property called clickCount *****
         // **** Note how we are using the Firebase .set() method ****
         // **** .ref() refers to the path you want to save your data to
         // **** Since we left .ref() blank, it will save to the root directory
         database.ref(ref).set({
-            filterArray: filterArray
+            filterArray: filterArray,
+            topicArray: topicArray
         });
     });
     
