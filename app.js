@@ -6,86 +6,94 @@ $(document).ready(function()  {
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     var topicArray = [];
-    //var topicArrayFinal = [];
     var topicName = " "
     var filterArray = [];
-    //var filterArrayFinal = [];
     var filterName = " ";
     var page = 1;
-    
-    
     
     
     // Initializing Firebase real time database
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    //Config
-    const firebaseConfig = {
-        apiKey: "AIzaSyChB3IDp6UAq-V_TP4GsPpw0CxpRyXiYT0",
-        authDomain: "uchoosenews-c7c3a.firebaseapp.com",
-        databaseURL: "https://uchoosenews-c7c3a.firebaseio.com",
-        storageBucket: "uchoosenews-c7c3a.appspot.com",
-    };
+    // //Config
+    // const firebaseConfig = {
+    //     apiKey: "AIzaSyChB3IDp6UAq-V_TP4GsPpw0CxpRyXiYT0",
+    //     authDomain: "uchoosenews-c7c3a.firebaseapp.com",
+    //     databaseURL: "https://uchoosenews-c7c3a.firebaseio.com",
+    //     storageBucket: "uchoosenews-c7c3a.appspot.com",
+    // };
     
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    // // Initialize Firebase
+    // firebase.initializeApp(firebaseConfig);
     
-    // Get a reference to the database service
-    var database = firebase.database();
+    // // Get a reference to the database service
+    // var database = firebase.database();
     
     // Weblink to Firebase 
     // https://uchoosenews-c7c3a.firebaseio.com/
+    
+    // <!-- The core Firebase JS SDK is always required and must be listed first -->
+    // <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase.js"></script>
     
     // Functions 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     // Function that calls the Google News API and displays them in the UI
+    
     function displayingArticles() {
         // Build the combined URL 
         var apiKey = 'a5d3ce7509aa44c08d88ab9be804d0fb'
-        
-        // default q 
+        // default for country
         country = 'us' 
-        
-        // text manipulation for the topic array
-        for (var i = 0; i < topicArray.length -1 ; i++) {
-            topicArrayFinal = topicArray[i] + ' AND ' + topicArray[topicArray.length -1]
-            console.log('Topic Array' + topicArrayFinal)
-        };
-        
-        // text manipulation for the filter array
-        for (var i = 0; i < filterArray.length -1 ; i++) {
-            var filterArrayFinal = filterArray[i] + ' OR ' + filterArray[filterArray.length -1]
-            //return filteredTopics
-            console.log('filter Array' + filterArrayFinal)
-        };
-        
-        // Logging for testing
-        console.log('filter length before ' + filterArrayFinal.length)
-        console.log('topic length before' + topicArrayFinal.length)
-        
         // Building the URL based on user choices
+        
+        
         // SPACES ARE INTENTIONAL AND IMPORTANT in the QUERY URL!!
-        if (topicArrayFinal.length > 0 && filterArrayFinal.length > 0) {
-          queryURL = 'https://newsapi.org/v2/everything?q=' + topicArrayFinal +   ' NOT (' + filterArrayFinal + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
-           console.log('1' + queryURL)
-        } else if (topicArrayFinal.length === 0 && filterArrayFinal.length > 0) {
-            queryURL = 'https://newsapi.org/v2/everything?q=' + topicArrayFinal +   ' NOT (' + filterArrayFinal + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
-            console.log('2' + queryURL)
-        } else if  (topicArrayFinal.length > 0 && filterArrayFinal.length === 0) {
-            queryURL = 'https://newsapi.org/v2/everything?q=' + topicArrayFinal +   ' NOT (' + filterArrayFinal + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
-            console.log('3'+ queryURL)
-        } else if (topicArrayFinal.length === 0 && filterArrayFinal.length === 0) {
+        if ((!Array.isArray(topicArray) || !topicArray.length) && (!Array.isArray(filterArray) || !filterArray.length)) {
             // Just show them trending stories for the US 
             queryURL = 'https://newsapi.org/v2/top-headlines?country=' + country +  '&page=' + page + '&apiKey=' + apiKey 
-            console.log('4'+ queryURL)
+            console.log('1'+ queryURL)
+            console.log( topicArray + ' ' + filterArray)
+
+        } else if ((!Array.isArray(topicArray) || !topicArray.length) && filterArray.length > 0) {
+            // text manipulation for the filter array
+            for (var i = 0; i < filterArray.length -1 ; i++) {
+                filterArray= filterArray[i] + ' OR ' + filterArray[filterArray.length -1]
+            }
+            
+            queryURL = 'https://newsapi.org/v2/everything?q= NOT (' + filterArray + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
+            
+            console.log('2' + queryURL)
+            console.log( topicArray + ' ' + filterArray)
+            
+        } else if  (topicArray.length > 0 && (!Array.isArray(filterArray) || !filterArray.length)) {
+            // text manipulation for the topic array
+            for (var i = 0; i < topicArray.length -1 ; i++) {
+                topicArray = topicArray[i] + ' AND ' + topicArray[topicArray.length -1]
+            };
+            
+            queryURL = 'https://newsapi.org/v2/everything?q=' + topicArray + '&page=' + page + '&language=en' + '&apiKey=' + apiKey
+            
+            console.log('3'+ queryURL)
+            console.log( topicArray + ' ' + filterArray)
+            
+        } else if (topicArray.length > 0 && filterArray.length > 0) {
+            
+            for (var i = 0; i < topicArray.length -1 ; i++) {
+                topicArray = topicArray[i] + ' AND ' + topicArray[topicArray.length -1]
+            };
+            
+            // text manipulation for the filter array
+            for (var i = 0; i < filterArray.length -1 ; i++) {
+                filterArray = filterArray[i] + ' OR ' + filterArray[filterArray.length -1]
+            };
+            
+            queryURL = 'https://newsapi.org/v2/everything?q=' + topicArray +   ' NOT (' + filterArray + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
+            
+            console.log('4' + queryURL)
+            console.log( topicArray + ' ' + filterArray)
+
         } else console.log('you broke it')
-        
-        // Logging for testing
-        console.log('filter length after ' + filterArrayFinal.length)
-        console.log('topic length after' + topicArrayFinal.length)
-        
-        
         
         
         //API Call to Google News API
@@ -126,35 +134,6 @@ $(document).ready(function()  {
                 $("#MainDisplay").prepend(articles);
                 const newelem = articles;
                 
-                
-                // Loops through the response and appends them to the UI
-                for (var i = 0; i < 10; i++) {
-                    
-                    // Creating a div to hold the title
-                    var articles = $("<div id='articles'>");
-                    
-                    // Storing the title of the article 
-                    var pTitle = $("<p>").text("Title: " + response.articles[i].title)
-                    console.log(response.articles[i].title)
-                    
-                    // Displaying the title
-                    articles.append(pTitle)
-                    
-                    // Adding the URL for the article
-                    var pLink = $("<p>").text("Link to Article:" + response.articles[i].url)
-                    
-                    //Displaying the URL 
-                    articles.append(pLink)
-                    
-                    // Append the built div to the page
-                    $("#MainDisplay").append(articles);
-                    const newelem = articles;
-                    
-                    // const callback = (score) => { 
-                    //     console.log(newelem.attr('id') + ' score: ' + score); 
-                    //     newelem.append($(`<p>${score}</p>`));
-                    // }
-                    
                     // Buckets the results from the score into positive, neutral, or negative sentiment buckets and displays them in the UI
                     const callback = (score) => {
                         
@@ -188,18 +167,14 @@ $(document).ready(function()  {
                     
                     // Calls the analyzeSentiment function and passes content from the Google API call to it
                     analyzeSentiment(response.articles[i].content, callback);
-                    
                 }
                 // Advances the page pulled from Google News API so it doesn't just pull the same articles over and over
                 page += 1;
-            };
-        })
+        });
     };
     
     // Function for Calling the Call Google NLP API
     function analyzeSentiment(content, callback) {
-        
-        
         $.ajax({
             type: "POST",
             url: "https://language.googleapis.com/v1/documents:analyzeSentiment?key=AIzaSyCGXL4FwDeO8GVzYxFpG3SDc9rSYAICIbQ",
@@ -299,10 +274,11 @@ $(document).ready(function()  {
     });
     
     // On click of submit button have the news articles displayed
+    
     $("#filtered-news-button").on('click', displayingArticles); 
     
-    // On click of submit button have the news articles displayed
-    $("#filtered-news-button").on('click', displayingArticles);
+    // For testing raw Array to Final 
+    // $("#filtered-news-button").on('click', rawArrayToFinal); 
     
     // Save my settings button stores the users name once its clicked
     $("#save-my-settings").on("click", function() {
@@ -325,6 +301,3 @@ $(document).ready(function()  {
     });
     
 }); // clousure to document on ready 
-
-
-
