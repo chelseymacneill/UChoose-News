@@ -59,7 +59,7 @@ $(document).ready(function()  {
             // text manipulation for the filter array
             var filterArrayFinal = filterArray[0]
             for (var i = 1; i < filterArray.length; i++) {
-                filterArrayFinal = ' OR ' + filterArray[i];
+                filterArrayFinal += ' OR ' + filterArray[i];
             }
             queryURL = 'https://newsapi.org/v2/everything?q= NOT (' + filterArrayFinal + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
             console.log('2: ' + queryURL)
@@ -70,7 +70,7 @@ $(document).ready(function()  {
             // text manipulation for the topic array
             var topicArrayFinal = topicArray[0]
             for (var i = 1; i < topicArray.length ; i++) {
-                topicArrayFinal = ' AND ' + topicArray[i]   
+                topicArrayFinal += ' AND ' + topicArray[i]   
             }
             queryURL = 'https://newsapi.org/v2/everything?q=' + topicArrayFinal + '&page=' + page + '&language=en' + '&apiKey=' + apiKey
             console.log('3: '+ queryURL)
@@ -81,12 +81,12 @@ $(document).ready(function()  {
             
             var topicArrayFinal = topicArray[0];
             for (var i = 1; i < topicArray.length ; i++) {
-                topicArrayFinal = ' AND ' + topicArray[i]   
+                topicArrayFinal += ' AND ' + topicArray[i]   
             }
             
             var filterArrayFinal = filterArray[0];
             for (var i = 1; i < filterArray.length; i++) {
-                filterArrayFinal = ' OR ' + filterArray[i];
+                filterArrayFinal += ' OR ' + filterArray[i];
             }
             
             queryURL = 'https://newsapi.org/v2/everything?q=' + topicArrayFinal +   ' NOT (' + filterArrayFinal + ') &page=' + page + '&language=en' + '&apiKey=' + apiKey
